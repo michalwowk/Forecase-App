@@ -36,6 +36,7 @@ Human approves every artifact. You never skip a gate.
 
 ## 4. Build
 - Follow the plan. Small commits, message `<type>(NNNN): <what>`.
+- Every commit needs the user's explicit approval. Show files + message, wait.
 - Divergence → update `plan.md` in the same commit, note why.
 - New business/product call → ask, then log in `docs/product/decisions.md`.
 
@@ -50,7 +51,7 @@ Human approves every artifact. You never skip a gate.
 - Append a `docs/worklog.md` entry: what was done, how, what went wrong, what was cut and why.
 - `docs/plan.md`: status `done` (or `cut` + one-line reason).
 - Update `README.md` if run steps, assumptions or the repo map changed.
-- Commit. Ask before push. Ask before opening the PR. Never merge.
+- Ask before commit. Ask before push. Ask before opening the PR. Never merge.
 
 ## Style
 - English. Short sentences. Bullets. Each section ≤ 5 bullets where possible.

@@ -11,6 +11,7 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 - Every non-trivial piece of work is a change. Run `/change <slug>`.
 - Cycle: intent → spec → plan → build → verify → close. Stop for human approval after intent, spec and plan.
 - One branch per change: `change/NNNN-slug`. Small commits.
+- Never commit without explicit approval. Show what will be committed, wait for "ok".
 - Never merge, never push to `main`. Ask before any push or PR.
 - Plan diverges during build → update the change's `plan.md` in the same commit.
 - Verification: run tests, then the `verifier` subagent. It reports; you fix.
