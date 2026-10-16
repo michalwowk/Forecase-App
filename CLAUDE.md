@@ -5,7 +5,7 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 ## Context
 - Product: rank the next 7 days for skiing, surfing, outdoor and indoor sightseeing in a city. See `docs/product/vision.md`.
 - Local brief: `brief.md` (gitignored). Read it, never commit it, never quote it in docs.
-- Stack: pnpm monorepo. `apps/api` Node + TS + graphql-yoga. `apps/web` Vite + React + TS. Vitest.
+- Stack: Node.js + GraphQL backend (fixed by brief). Rest decided in `0003-repo-scaffold` (D-008).
 
 ## Workflow
 - Every non-trivial piece of work is a change. Run `/change <slug>`.
@@ -38,4 +38,4 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 - `docs/worklog.md` — how the work went, session by session.
 
 ## Commands
-- TBD after `0003-monorepo-scaffold`.
+- TBD after `0003-repo-scaffold`.

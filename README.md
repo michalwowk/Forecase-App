@@ -9,8 +9,7 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 
 | Path | What |
 |---|---|
-| `apps/api` | GraphQL API (from `0003`) |
-| `apps/web` | Web UI (from `0003`) |
+| _code_ | Layout decided in `0003-repo-scaffold` |
 | [`docs/plan.md`](docs/plan.md) | Roadmap of changes + status |
 | [`docs/changes/`](docs/changes/) | One folder per change: `intent.md`, `spec.md`, `plan.md` |
 | [`docs/product/vision.md`](docs/product/vision.md) | What we build and why |
@@ -23,7 +22,7 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 | [`.claude/`](.claude/) | `/change` skill, `verifier` subagent |
 
 ## How to run
-TBD after `0003-monorepo-scaffold`.
+TBD after `0003-repo-scaffold`.
 
 ## Assumptions
 - No persistence. Open-Meteo called per request.

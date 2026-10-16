@@ -23,7 +23,7 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Rejected:** Direct commits to `main`.
 - **Change:** 0001
 
-## D-004 Stack (2026-10-16) — proposed
+## D-004 Stack (2026-10-16) — superseded by D-008
 
 - **Decision:** pnpm monorepo. `apps/api` Node + TS + graphql-yoga. `apps/web` Vite + React + TS. Vitest.
 - **Why:** Brief asks for Node + GraphQL, team uses React + TS. Yoga and Vite are light and fast to set up.
@@ -51,3 +51,9 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Rejected:** Separate skills per step; single approval before code.
 - **Change:** 0001
 
+## D-008 No stack decision before discovery (2026-10-16)
+
+- **Decision:** Stack and repo shape are decided in `0003-repo-scaffold`, from `0002-discovery` output. D-004 is withdrawn.
+- **Why:** Don't decide how it looks before we know what we build.
+- **Fixed by brief:** Node.js + GraphQL backend. React + TS front end is the default, not required.
+- **Change:** 0001

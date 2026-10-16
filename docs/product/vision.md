@@ -1,5 +1,7 @@
 # Vision
 
+> Draft from 0001. Finalized in `0002-discovery`.
+
 ## Problem
 - You're planning the week. You know the town. You don't know which day is best for what.
 - Raw forecasts (temperature, wind, rain, swell) don't answer "should I go surfing on Thursday?".
@@ -24,11 +26,11 @@
 - Forecasts beyond 7 days. Activities beyond the four.
 
 ## Stack
-- pnpm monorepo: `apps/api` (Node, TS, graphql-yoga), `apps/web` (Vite, React, TS). Vitest. See D-004.
+- Fixed by brief: Node.js + GraphQL backend. Rest decided in `0003-repo-scaffold` (D-008).
 
 ## Open questions
 - Ambiguous names (Paris FR vs Paris TX): pick first match or let user choose?
 - Whose timezone defines "a day"? Likely the place's.
 - Inland place + surfing: score 0, or "not applicable"?
-- Skiing: snow depth vs snowfall vs altitude — what data is there? → `0002`.
+- Skiing: snow depth vs snowfall vs altitude — what data is there? → `0002-discovery`.
 - Indoor sightseeing: score = how bad outside is? Or flat-ish?
