@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+*.log
+.DS_Store
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Task brief stays local
+brief.md
+EXCERSICE.md
