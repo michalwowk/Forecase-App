@@ -15,3 +15,11 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **What:** Closed 0001. Removed the broken `grill-me` skill and `skills-lock.json`. README and D-004 point to D-008 (stack deferred).
 - **How:** Ticked acceptance criteria, ran `verifier`, marked roadmap `done`.
 - **Went wrong:** A staged edit dropped "superseded by D-008" from D-004. Caught at resume and restored.
+
+## 2026-10-19 — 0002 discovery
+- **What:** Open-Meteo research (4 notes + data selection), competitor review, 16 product/UI questions → D-009…D-015, final `vision.md` with ASCII sketch.
+- **How:** 4 research subagents in parallel with live curl on 6 places. Product session one question at a time.
+- **Calls I made:** Open-Meteo only (no OSM pistes); week grid UI; Unsafe state for storms, not for heavy rain; indoor complements outdoor; hourly windows instead of daily totals.
+- **Findings that changed the product:** town height gives zero snow → elevation grid; inland marine returns nulls, not errors → "Not applicable".
+- **Went wrong:** `data-selection.md` written before the decisions, so it went stale. Verifier caught it; rewritten.
+- **Cut:** air quality (4.5-day horizon), i18n, unit toggle, hourly charts (later idea).

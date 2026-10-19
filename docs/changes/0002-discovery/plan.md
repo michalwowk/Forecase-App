@@ -29,4 +29,4 @@ Status: approved
 - `wc -l docs/research/*.md` — each ≤ ~60.
 
 ## Divergence log
--
+- `data-selection.md` written before the product session (step 3 before 4). Rewritten after D-010…D-013; verifier caught the drift.
