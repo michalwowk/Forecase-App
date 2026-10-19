@@ -1,7 +1,7 @@
 # Forecase
 
 Enter a city or town. See how good each of the next 7 days is for skiing, surfing, outdoor sightseeing and indoor sightseeing.
-Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. React + TS frontend shows it.
+Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. Frontend not chosen yet (React + TS is the default, see D-008).
 
 > Status: setup done (change `0001`). App not built yet. See [roadmap](docs/plan.md).
 
