@@ -3,6 +3,10 @@ dist/
 coverage/
 .env
 .env.*
+!.env.example
+
+# GraphQL Codegen output
+generated/
 *.log
 .DS_Store
 
