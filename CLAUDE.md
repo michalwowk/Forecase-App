@@ -18,7 +18,7 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 
 ## Decisions
 - Business and product calls belong to the human. Ask, don't decide silently.
-- Record every decision in `docs/product/decisions.md` (mini-ADR format).
+- Record business and product decisions in `docs/product/decisions.md` (mini-ADR format). Process and tooling choices stay out.
 - Scoring logic and its reasoning live in `docs/product/scoring.md`.
 
 ## Code
