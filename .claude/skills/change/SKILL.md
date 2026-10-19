@@ -59,6 +59,7 @@ Human approves every artifact. You never skip a gate.
 - Append a `docs/worklog.md` entry: what was done, how, what went wrong, what was cut and why.
 - `docs/plan.md`: status `done` (or `cut` + one-line reason).
 - Update `README.md` if run steps, assumptions or the repo map changed.
+- PR body follows `.github/pull_request_template.md`. Fill only what applies; keep it short.
 - Ask before commit. Ask before push. Ask before opening the PR. Never merge.
 
 ## Style
