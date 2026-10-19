@@ -23,7 +23,7 @@ Status: approved
 - Open-Meteo research — `0002`.
 
 ## Acceptance criteria
-- [ ] Every path in the README repo map exists.
-- [ ] `brief.md` is gitignored and absent from history.
-- [ ] `/change` and `verifier` are discoverable by Claude Code.
-- [ ] Decisions from the grilling are in `decisions.md`.
+- [x] Every path in the README repo map exists.
+- [x] `brief.md` is gitignored and absent from history.
+- [x] `/change` and `verifier` are discoverable by Claude Code.
+- [x] Decisions from the grilling are in `decisions.md`.

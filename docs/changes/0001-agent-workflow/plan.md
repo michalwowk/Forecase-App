@@ -26,4 +26,3 @@ Status: approved
 
 ## Divergence log
 - Original brief moved to a local backup outside the repo instead of deleted.
-- No GitHub remote yet → PR opened later.
