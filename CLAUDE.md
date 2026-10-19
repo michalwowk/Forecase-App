@@ -38,4 +38,9 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 - `docs/worklog.md` — how the work went, session by session.
 
 ## Commands
-- TBD after `0003-repo-scaffold`.
+- Node 24 (`.nvmrc`), pnpm. Install: `pnpm install`.
+- `pnpm dev` — API + web. One app: `pnpm --filter api dev` / `pnpm --filter web dev`.
+- `pnpm test`, `pnpm typecheck`, `pnpm lint` (Biome). Fix format: `pnpm format`.
+- Env: Zod-validated in each app's `src/env.ts`; read `env` from there. `APP_MODE`, not `NODE_ENV`.
+- GraphQL contract: `apps/api/schema.graphql`. Types are generated (gitignored) by every command.
+- Tests mock HTTP with MSW, handlers per domain in `apps/*/mocks/handlers/`.
