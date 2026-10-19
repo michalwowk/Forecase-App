@@ -33,7 +33,7 @@
 - Empty: search box only.
 - Loading: grid skeleton.
 - Unknown place: "No place called X" + search again.
-- Partial failure: working rows shown, failed row says "Data temporarily unavailable".
+- Partial failure: working rows shown, failed row says "Data temporarily unavailable" (Marine → surfing, Elevation → skiing).
 - Full failure (geocoding or forecast down): error + retry.
 
 ## How it works
