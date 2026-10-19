@@ -57,3 +57,52 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Why:** Don't decide how it looks before we know what we build.
 - **Fixed by brief:** Node.js + GraphQL backend. React + TS front end is the default, not required.
 - **Change:** 0001
+
+## D-009 Place resolution (2026-10-19)
+
+- **Decision:** Take the top geocoding match, show it clearly (name, region, country), offer "Not this place?" with the other matches. Surf data is for the sea near the town, not a specific beach.
+- **Why:** Usually right first time; one click to fix; no extra request. We have no beach coordinates.
+- **Rejected:** Always ask the user to pick; first match with no way to change.
+- **Change:** 0002
+
+## D-010 What a day is (2026-10-19)
+
+- **Decision:** A day is a calendar day in the place's timezone. Each activity is scored on its own hour window, from hourly data. Today counts only for window hours not yet past; once closed, day 8 joins so 7 usable days show.
+- **Why:** People plan in local time. Rain at 3 am shouldn't spoil a sightseeing day. Don't show days the user can't use.
+- **Rejected:** Whole-day daily aggregates; user's timezone; always starting tomorrow.
+- **Change:** 0002
+
+## D-011 Score meaning (2026-10-19)
+
+- **Decision:** Absolute 0–100 score, same thresholds everywhere. UI shows a word label + colour (Poor / Fair / Good / Great), never colour alone. Separate states: "Not applicable" (activity impossible here), "No data" (gap for that day), "Unsafe" (dangerous weather for the whole day).
+- **Unsafe:** thunderstorm with hail, hurricane-force gusts, extreme heat or cold. Heavy rain is Poor, not Unsafe. Thresholds in `0004`.
+- **Why:** Comparable, explainable, no history needed. Zero means "bad day"; "not applicable" means "can't do it here"; "unsafe" means "stay home".
+- **Rejected:** Score relative to a place's potential (needs historical data); 7 tiers like Surfline.
+- **Change:** 0002
+
+## D-012 Skiing terrain (2026-10-19)
+
+- **Decision:** Sample a 100-point grid (~40×40 km) with the Elevation API. Take the highest point, capped to a ski range, and forecast snow there. Show the height used ("Data for ~1900 m nearby"). No clearly higher terrain → "Not applicable".
+- **Why:** Town height gives ~0 snow in Zakopane and Innsbruck. Open-Meteo only; no resort data exists there, so we say "mountains nearby", not "slope".
+- **Rejected:** Town elevation; fixed offset (invents mountains); OpenStreetMap pistes (outside Open-Meteo).
+- **Change:** 0002
+
+## D-013 Indoor sightseeing (2026-10-19)
+
+- **Decision:** Indoor complements outdoor: the worse the day outside, the better for indoor. Floor at Fair. Unsafe days are Unsafe for indoor too.
+- **Why:** Helps split a week: museums on the rainy day, walks on the sunny one.
+- **Rejected:** Flat score (useless ranking); pure inverse without a floor.
+- **Change:** 0002
+
+## D-014 Results UI (2026-10-19)
+
+- **Decision:** Week grid: rows = 4 activities, columns = 7 days in calendar order, best day per row highlighted. Click a cell → detail: label, score, 1–3 reasons, key values, what the data covers. Rotates to days-as-rows on mobile.
+- **Why:** Plan the whole week at a glance. Reasons explain the score. One data fetch serves the whole view.
+- **Rejected:** Tabs per activity; one mixed ranking; hourly charts (later idea).
+- **Change:** 0002
+
+## D-015 MVP cuts (2026-10-19)
+
+- **Decision:** English UI only, no i18n. Metric units only, no toggle. Hourly chart in day detail is a later idea.
+- **Why:** MVP. None of them changes the ranking.
+- **Change:** 0002
