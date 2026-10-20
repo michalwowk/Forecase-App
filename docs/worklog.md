@@ -52,3 +52,15 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **I asked for (readability):** `/simplify` before going on, and a module README readable in under 10 minutes.
 - **Dropped:** asked for a 200-city calibration run; agent flagged it was out of scope (0005) and could turn absolute scores relative (D-011) → I chose the review fixes only. Logged as an idea for 0005.
 - **Walkthrough:** asked to be walked through the code step by step; had to ask twice for `scoreWeek` itself — agent jumped to helpers before explaining the flow. Found on the way: "Calm wind" at 40 km/h gusts → every reason text now shows its value.
+
+## 2026-10-20 — 0005 graphql-api (in progress)
+- **I corrected the agent:**
+  - Proposed auto top match + ranked "Not this place?" (D-009) → I want a plain list in Open-Meteo order, user picks.
+  - Fixed `count=10` → I asked to expose the Geocoding params (`count`, `countryCode`, `language`).
+  - Proposed an Elevation cache → we had agreed not to worry about limits.
+  - Put the UTC rule in `CLAUDE.md` → it's for humans too; module README + root README.
+- **Had to ask to understand:** asked for a recap of the UI decisions before answering about place choice.
+- **I asked for:** all Open-Meteo calls in UTC, as a written rule.
+- **I corrected the agent:** designed the schema REST-style (`week(placeId)`) → I gave it the Shopify GraphQL design tutorial to read first; redesigned around `Place`.
+- **I corrected the agent:** kept the 100-point elevation grid from D-012 → test app, fewer points; checked live and chose 5×5.
+- **Had to ask to understand:** how external APIs are tested (live vs mocks, versioning, Zod) → plan got a "Testing" section; the stale-fixtures risk read like live tests.
