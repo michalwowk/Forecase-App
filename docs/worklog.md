@@ -67,3 +67,10 @@ How the work went. One entry per session. What, how, what went wrong, what was c
   - Kept the 100-point grid from D-012 → test app, fewer points; checked live, chose 5×5.
 - **Had to ask to understand:** a recap of the UI decisions; `Node` and id options (a/b/c); how external APIs are tested (live vs mocks, versioning, Zod) → plan got a "Testing" section.
 - **I asked for:** all Open-Meteo calls in UTC as a written rule; after step 3, finish without stops, take the recommended option.
+
+## 2026-10-20 — 0006 bff-simplify (close)
+- **What:** GraphQL down to `placeSearch(query)` + `forecast(placeId)`; only fields the UI shows. D-025. Layers below unchanged. 144 tests (removed-feature tests dropped, the rest moved).
+- **How:** 4 intent questions, spec without grilling, plan approved with the spec ("implement right away"). `verifier` ready, `/code-review` 6 findings, 4 fixed.
+- **Went wrong:** agent dropped the 1-forecast limit, claiming aliases cost only 2 calls; review showed any number of aliases → limit restored.
+- **I corrected the agent:** the 0005 schema was too big for a BFF (search params, `Node`, coordinates, nested `Place.forecast`) → take a place, do the rest underneath.
+- **Didn't fit:** agent read my "tak" as option (b) (one query + alternatives); I meant to go back and chose (c) (two steps, slimmed).

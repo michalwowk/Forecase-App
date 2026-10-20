@@ -3,6 +3,8 @@ import { buildUrl, getJson } from "@/features/openMeteo/client/getJson.ts";
 import { UpstreamError } from "@/features/openMeteo/client/upstreamError.ts";
 
 const BASE = "https://geocoding-api.open-meteo.com/v1";
+/** Open-Meteo ids are Int32. */
+const MAX_ID = 2 ** 31 - 1;
 /** Open-Meteo's 400 text for an unknown id on `/get`. */
 const NOT_FOUND_REASON = "Location ID not found.";
 
@@ -43,6 +45,13 @@ export function searchPlaces(search: PlaceSearch): Promise<GeocodingPlace[]> {
 		format: "json",
 	});
 	return getJson("geocoding", url, searchResponse);
+}
+
+/** Canonical GeoNames id ("2775220", no leading zeros) as a number; anything else → null. */
+export function parsePlaceId(id: string): number | null {
+	if (!/^[1-9]\d*$/.test(id)) return null;
+	const n = Number(id);
+	return n <= MAX_ID ? n : null;
 }
 
 /** One place by GeoNames id; unknown id → null. */

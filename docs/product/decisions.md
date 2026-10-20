@@ -170,3 +170,11 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Weak spot:** a sparse grid can miss a peak → data for a lower height than the pistes.
 - **Note:** Week fetched by UTC `start_hour`/`end_hour`, not `forecast_days=8` (D-016 note). Goal of D-016 unchanged.
 - **Change:** 0005. Needs PO/PM review.
+
+## D-025 Slim BFF (2026-10-20)
+
+- **Decision:** The GraphQL API exposes only what the UI needs: `placeSearch(query)` → id, name, region, country; `forecast(placeId)` → place + 4 activity rows. Search size (10) and language (`en`) are backend constants. Partly supersedes D-022: search no longer takes count, country code or language. "Open-Meteo order, the user picks" stays.
+- **Why:** It's a backend for one frontend. Everything else is backend detail. Less to learn, test and keep stable.
+- **Known trade-off:** a bigger app (more clients, filters, languages) would need to widen and rethink the schema.
+- **Rejected:** 0005 schema with Open-Meteo params, `Node`, `Place.forecast`; one query by name with alternatives (back to D-009).
+- **Change:** 0006

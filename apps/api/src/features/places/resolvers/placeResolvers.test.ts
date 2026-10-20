@@ -5,40 +5,42 @@ import { server } from "@/mocks/server.ts";
 import { errorCodes, execute } from "@/test/graphql.ts";
 
 const SEARCH = /* GraphQL */ `
-	query Search($query: String!, $first: Int, $countryCode: String, $language: String) {
-		placeSearch(query: $query, first: $first, countryCode: $countryCode, language: $language) {
-			id
-			name
-			region
-			country
-			countryCode
-			coordinates { latitude longitude }
-			timezone
-		}
-	}
-`;
-const PLACE = /* GraphQL */ `
-	query Place($id: ID!) {
-		place(id: $id) { id name region country timezone }
+	query Search($query: String!) {
+		placeSearch(query: $query) { id name region country }
 	}
 `;
 
 type Search = {
-	placeSearch: { id: string; name: string; region: string | null }[];
+	placeSearch: {
+		id: string;
+		name: string;
+		region: string | null;
+		country: string | null;
+	}[];
 };
+
+/** Captures the Geocoding search query string. */
+function captureSearch() {
+	const seen: { params?: URLSearchParams } = {};
+	server.use(
+		http.get(URLS.search, ({ request }) => {
+			seen.params = new URL(request.url).searchParams;
+			return HttpResponse.json({});
+		}),
+	);
+	return seen;
+}
 
 describe("placeSearch", () => {
 	it("returns matches in Open-Meteo order", async () => {
 		const result = await execute<Search>(SEARCH, { query: "Paris" });
 		const places = result.data?.placeSearch ?? [];
 		expect(places).toHaveLength(10);
-		expect(places[0]).toMatchObject({
+		expect(places[0]).toEqual({
 			id: "2988507",
 			name: "Paris",
 			region: "Île-de-France Region",
 			country: "France",
-			countryCode: "FR",
-			timezone: "Europe/Paris",
 		});
 		expect(places.map((p) => p.region).slice(1, 3)).toEqual([
 			"Texas",
@@ -46,40 +48,15 @@ describe("placeSearch", () => {
 		]);
 	});
 
-	it("passes first, countryCode and language to Open-Meteo", async () => {
-		let params: URLSearchParams | undefined;
-		server.use(
-			http.get(URLS.search, ({ request }) => {
-				params = new URL(request.url).searchParams;
-				return HttpResponse.json({});
-			}),
-		);
-		await execute(SEARCH, {
-			query: " Paris ",
-			first: 3,
-			countryCode: "us",
-			language: "de",
-		});
-		expect(Object.fromEntries(params ?? [])).toMatchObject({
+	it("sends the trimmed query with backend constants: 10 results, English, no country filter", async () => {
+		const seen = captureSearch();
+		await execute(SEARCH, { query: " Paris " });
+		expect(Object.fromEntries(seen.params ?? [])).toEqual({
 			name: "Paris",
-			count: "3",
-			countryCode: "US",
-			language: "de",
+			count: "10",
+			language: "en",
+			format: "json",
 		});
-	});
-
-	it("defaults to 10 results in English", async () => {
-		let params: URLSearchParams | undefined;
-		server.use(
-			http.get(URLS.search, ({ request }) => {
-				params = new URL(request.url).searchParams;
-				return HttpResponse.json({});
-			}),
-		);
-		await execute(SEARCH, { query: "Paris" });
-		expect(params?.get("count")).toBe("10");
-		expect(params?.get("language")).toBe("en");
-		expect(params?.has("countryCode")).toBe(false);
 	});
 
 	it("no matches → empty list", async () => {
@@ -87,13 +64,8 @@ describe("placeSearch", () => {
 		expect(result).toEqual({ data: { placeSearch: [] } });
 	});
 
-	it.each([
-		["blank query", { query: "  " }],
-		["first 0", { query: "Paris", first: 0 }],
-		["first 101", { query: "Paris", first: 101 }],
-		["country code not 2 letters", { query: "Paris", countryCode: "FRA" }],
-	])("%s → BAD_USER_INPUT", async (_, variables) => {
-		const result = await execute(SEARCH, variables);
+	it("blank query → BAD_USER_INPUT", async () => {
+		const result = await execute(SEARCH, { query: "  " });
 		expect(errorCodes(result)).toEqual(["BAD_USER_INPUT"]);
 		expect(result.data).toBeNull();
 	});
@@ -104,35 +76,6 @@ describe("placeSearch", () => {
 		);
 		const result = await execute(SEARCH, { query: "Paris" });
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
-	});
-});
-
-describe("place", () => {
-	it("returns the place by id", async () => {
-		const result = await execute(PLACE, { id: "2775220" });
-		expect(result.data).toEqual({
-			place: {
-				id: "2775220",
-				name: "Innsbruck",
-				region: "Tyrol",
-				country: "Austria",
-				timezone: "Europe/Vienna",
-			},
-		});
-	});
-
-	it.each(["999999999", "abc", "99999999999", "02775220"])(
-		"unknown id %s → null",
-		async (id) => {
-			const result = await execute(PLACE, { id });
-			expect(result).toEqual({ data: { place: null } });
-		},
-	);
-
-	it("Geocoding down → UPSTREAM_UNAVAILABLE", async () => {
-		server.use(http.get(URLS.get, () => HttpResponse.error()));
-		const result = await execute(PLACE, { id: "2775220" });
-		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
-		expect(result.data).toEqual({ place: null });
+		expect(result.data).toBeNull();
 	});
 });
