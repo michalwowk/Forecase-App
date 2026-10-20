@@ -156,6 +156,23 @@ describe("Open-Meteo requests", () => {
 	});
 });
 
+describe("forecast budget", () => {
+	it("one forecast per request; the next one is BAD_USER_INPUT", async () => {
+		const result = await execute<{
+			a: { forecast: unknown } | null;
+			b: { forecast: unknown } | null;
+		}>(/* GraphQL */ `
+			{
+				a: place(id: "2775220") { forecast { days } }
+				b: place(id: "3094802") { forecast { days } }
+			}
+		`);
+		const forecasts = [result.data?.a?.forecast, result.data?.b?.forecast];
+		expect(forecasts.filter((f) => f !== null)).toHaveLength(1);
+		expect(errorCodes(result)).toEqual(["BAD_USER_INPUT"]);
+	});
+});
+
 describe("failures", () => {
 	it("Marine down → surfing unavailable, rest scored", async () => {
 		server.use(
@@ -203,6 +220,14 @@ describe("failures", () => {
 				return HttpResponse.json({});
 			}),
 		);
+		const { result } = await forecastFor("innsbruck");
+		expect(result.data?.place?.forecast).toBeNull();
+		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
+	});
+
+	it("Forecast without the mountain series → UPSTREAM_UNAVAILABLE, not 'not applicable'", async () => {
+		const [town] = fixture("innsbruck", "forecast") as unknown[];
+		server.use(http.get(URLS.forecast, () => HttpResponse.json(town as never)));
 		const { result } = await forecastFor("innsbruck");
 		expect(result.data?.place?.forecast).toBeNull();
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);

@@ -30,6 +30,13 @@ describe("gridPoints", () => {
 		expect(corner?.latitude).toBeCloseTo(town.latitude - 20 / 111.32, 6);
 		expect(corner?.longitude).toBeLessThan(town.longitude - 20 / 111.32);
 	});
+
+	it("wraps longitude near the antimeridian", () => {
+		const fiji = { latitude: -16.8, longitude: 179.95 };
+		const longitudes = gridPoints(fiji, terrain).map((p) => p.longitude);
+		expect(longitudes.every((lon) => lon >= -180 && lon <= 180)).toBe(true);
+		expect(longitudes.some((lon) => lon < 0)).toBe(true);
+	});
 });
 
 describe("townElevation", () => {

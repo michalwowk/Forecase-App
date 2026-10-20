@@ -13,6 +13,12 @@ const NO_ELEVATION = -9999;
 
 const toRad = (deg: number) => (deg * Math.PI) / 180;
 const toDeg = (rad: number) => (rad * 180) / Math.PI;
+/** Longitude back into −180…180 (grids near the antimeridian). */
+const wrapLongitude = (lon: number) => {
+	if (lon > 180) return lon - 360;
+	if (lon < -180) return lon + 360;
+	return lon;
+};
 
 export interface GridPoint extends LatLon {
 	elevation: number;
@@ -28,7 +34,7 @@ export function gridPoints(town: LatLon, config: TerrainConfig): LatLon[] {
 	return cells.flatMap((row) =>
 		cells.map((col) => ({
 			latitude: town.latitude + row * dLat,
-			longitude: town.longitude + col * dLon,
+			longitude: wrapLongitude(town.longitude + col * dLon),
 		})),
 	);
 }

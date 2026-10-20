@@ -53,3 +53,6 @@ Status: approved
 ## Divergence log
 - Step 4: orchestration (`forecast/service/placeForecast.ts`) and `forecast/fields.ts` written before the fixtures: recording ran our own client + orchestration from a throwaway script, so requests match production. Resolver in step 6 only maps it to GraphQL.
 - `ForecastPoint.elevation` nullable → `nan` (model cell height) when the town height is unknown and the grid failed.
+- Extra files: `context/graphqlContext.ts`, `utils/{dateScalar,graphqlErrors}.ts`, `test/graphql.ts`, `mocks/server.ts`, `openMeteo/client/{hourly,upstreamError}.ts`. `forecast/fields.ts` at the feature root, like `scoring/scoreWeek.ts`.
+- Small behaviour not in spec: blank `language` → `BAD_USER_INPUT`; `countryCode` upper-cased; ids must be canonical (no leading zeros, ≤ Int32) else `null`; error `extensions.service`; `Date` scalar checks format.
+- Code review fixes: 1 forecast per request; `first`/`language` non-null with defaults; missing mountain series → upstream error; body-read timeout → `timeout`; longitude wrap near ±180°. Skipped: surf without bearing when Elevation fails (by spec), sea only at exactly 0 m (D-020 weak spot), poles.

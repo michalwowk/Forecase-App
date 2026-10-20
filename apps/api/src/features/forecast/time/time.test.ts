@@ -23,6 +23,12 @@ describe("UTC ↔ local", () => {
 		expect(utcToLocal("2026-10-25T01:00", VIENNA)).toBe("2026-10-25T02:00");
 	});
 
+	it("skips the spring-forward hour", () => {
+		// CET → CEST on 2026-03-29 at 02:00 local (01:00 UTC): 02:00 never happens.
+		expect(utcToLocal("2026-03-29T00:00", VIENNA)).toBe("2026-03-29T01:00");
+		expect(utcToLocal("2026-03-29T01:00", VIENNA)).toBe("2026-03-29T03:00");
+	});
+
 	it("keeps half-hour offsets", () => {
 		expect(utcToLocal("2026-10-20T04:00", "Asia/Kolkata")).toBe(
 			"2026-10-20T09:30",

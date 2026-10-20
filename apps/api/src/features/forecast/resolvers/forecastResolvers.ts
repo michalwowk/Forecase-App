@@ -17,7 +17,7 @@ import type {
 	PlaceResolvers,
 	WeekForecast,
 } from "@/generated/graphql.ts";
-import { toGraphQLError } from "@/utils/graphqlErrors.ts";
+import { badUserInput, toGraphQLError } from "@/utils/graphqlErrors.ts";
 
 const STATES: Record<DayState, GqlDayState> = {
 	scored: "SCORED",
@@ -65,6 +65,13 @@ export function toWeekForecast(forecast: PlaceForecast): WeekForecast {
 }
 
 export const placeForecastField: PlaceResolvers = {
-	forecast: (place, _, { now }) =>
-		placeForecast(place, now()).then(toWeekForecast, toGraphQLError),
+	forecast: (place, _, { now, forecastBudget }) => {
+		if (forecastBudget.left <= 0) {
+			throw badUserInput(
+				"Only one forecast per request: query place(id) instead",
+			);
+		}
+		forecastBudget.left -= 1;
+		return placeForecast(place, now()).then(toWeekForecast, toGraphQLError);
+	},
 };

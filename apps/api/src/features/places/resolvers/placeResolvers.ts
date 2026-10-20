@@ -28,9 +28,9 @@ const searchArgs = z.object({
 	language: z.string().trim().min(1, "language must not be blank"),
 });
 
-/** GeoNames id as a number; anything else can't exist → null. */
+/** Canonical GeoNames id ("2775220", no leading zeros) as a number; anything else → null. */
 function parseId(id: string): number | null {
-	if (!/^\d+$/.test(id)) return null;
+	if (!/^[1-9]\d*$/.test(id)) return null;
 	const n = Number(id);
 	return n <= MAX_INT32 ? n : null;
 }

@@ -61,8 +61,13 @@ export async function placeForecast(
 		orNull(fetchMarine(place, MARINE_FIELDS, range)),
 	]);
 
+	// fetchElevations guarantees one height per point.
 	const terrain: GridPoint[] | null =
-		heights && grid.map((p, i) => ({ ...p, elevation: heights[i] ?? 0 }));
+		heights &&
+		grid.flatMap((p, i) => {
+			const elevation = heights[i];
+			return elevation === undefined ? [] : [{ ...p, elevation }];
+		});
 	const town = townElevation(place, place.elevation, terrain);
 	const mountain =
 		terrain && town !== null
@@ -73,12 +78,13 @@ export async function placeForecast(
 		{ ...place, elevation: town },
 		...(mountain ? [mountain] : []),
 	];
-	const [townSeries, mountainSeries] = await fetchForecast(
-		points,
-		FORECAST_FIELDS,
-		range,
-	);
-	if (!townSeries) throw new UpstreamError("forecast", "shape");
+	const series = await fetchForecast(points, FORECAST_FIELDS, range);
+	const [townSeries, mountainSeries] = series;
+	if (!townSeries || series.length !== points.length) {
+		throw new UpstreamError("forecast", "shape", {
+			reason: `expected ${points.length} series, got ${series.length}`,
+		});
+	}
 
 	const week = scoreWeek(
 		{

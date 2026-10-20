@@ -121,7 +121,7 @@ describe("place", () => {
 		});
 	});
 
-	it.each(["999999999", "abc", "99999999999"])(
+	it.each(["999999999", "abc", "99999999999", "02775220"])(
 		"unknown id %s → null",
 		async (id) => {
 			const result = await execute(PLACE, { id });

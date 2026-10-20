@@ -8,6 +8,9 @@ import {
 // Open-Meteo error body: {"error": true, "reason": "..."}.
 const errorBody = z.object({ reason: z.string() });
 
+const isTimeout = (error: unknown) =>
+	error instanceof DOMException && error.name === "TimeoutError";
+
 async function readReason(response: Response): Promise<string | undefined> {
 	try {
 		return errorBody.parse(await response.json()).reason;
@@ -31,9 +34,7 @@ export async function getJson<T>(
 			signal: AbortSignal.timeout(env.OPEN_METEO_TIMEOUT_MS),
 		});
 	} catch (cause) {
-		const timedOut =
-			cause instanceof DOMException && cause.name === "TimeoutError";
-		throw new UpstreamError(service, timedOut ? "timeout" : "network", {
+		throw new UpstreamError(service, isTimeout(cause) ? "timeout" : "network", {
 			cause,
 		});
 	}
@@ -49,7 +50,10 @@ export async function getJson<T>(
 	try {
 		body = await response.json();
 	} catch (cause) {
-		throw new UpstreamError(service, "shape", { cause });
+		// The timeout also covers reading the body.
+		throw new UpstreamError(service, isTimeout(cause) ? "timeout" : "shape", {
+			cause,
+		});
 	}
 	const parsed = schema.safeParse(body);
 	if (!parsed.success) {

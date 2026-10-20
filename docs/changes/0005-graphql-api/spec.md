@@ -10,10 +10,11 @@ Schema design follows the Shopify GraphQL design tutorial (domain objects, objec
 - Forecast = 0004 `scoreWeek` on live data. API owns all scoring; web only displays.
 - All Open-Meteo calls in UTC (`timezone=GMT`, `start_hour`/`end_hour`). Local time computed by us from the IANA timezone.
 - No cache (MVP, limit risk accepted). Timeout `OPEN_METEO_TIMEOUT_MS` (env, default 5000). No retry.
+- One `forecast` per GraphQL request (code review: `placeSearch { forecast }` would fan out to ~300 calls).
 
 ## Behaviour
 - **Calls per forecast:** `get?id` → (Elevation 5×5 grid + Marine) → Forecast (town + mountain point in one request).
-- **Hour range:** local 16:00 of today (ski fresh snow) to local end of day +7, converted to UTC. Series times converted UTC → local before scoring. DST: a repeated hour counts twice, a skipped hour is missing.
+- **Hour range:** earliest window start (ski fresh snow from 16:00 the day before day 1) to the latest window end on day 7, local → UTC. Series times converted UTC → local before scoring. DST: a repeated hour counts twice, a skipped hour is missing.
 - **Today:** local date of the place from the server clock.
 - **Mountain point:** grid ±20 km around town. Highest point, capped at 2500 m. Not applicable if max < 1000 m or max < town + 500 m. Town height = Geocoding `elevation`; missing or `-9999` → nearest grid point. Numbers in the scoring config.
 - **Sea bearing:** town → centre of grid points at 0 m (D-020). None → `null`.
@@ -23,7 +24,7 @@ Schema design follows the Shopify GraphQL design tutorial (domain objects, objec
 ## Interface
 ```graphql
 type Query {
-  placeSearch(query: String!, first: Int = 10, countryCode: String, language: String = "en"): [Place!]!
+  placeSearch(query: String!, first: Int! = 10, countryCode: String, language: String! = "en"): [Place!]!
   place(id: ID!): Place
 }
 interface Node { id: ID! }
@@ -63,6 +64,7 @@ enum Label { POOR FAIR GOOD GREAT }
 | No matches | `[]` |
 | Unknown or non-numeric `place` id (Open-Meteo 400 "not found") | `null` |
 | `first` ∉ 1–100, blank `query`, `countryCode` not 2 letters | `BAD_USER_INPUT` |
+| 2nd `forecast` in one request | `BAD_USER_INPUT` |
 | Geocoding down | `UPSTREAM_UNAVAILABLE`, field `null` |
 | Forecast down | `UPSTREAM_UNAVAILABLE` at `place.forecast` |
 | Marine down | `SURFING.available = false` |
@@ -76,7 +78,7 @@ enum Label { POOR FAIR GOOD GREAT }
 ## Acceptance criteria
 - [ ] `placeSearch(query: "Paris")` returns Open-Meteo order; `first`, `countryCode`, `language` reach the request.
 - [ ] Invalid args → `BAD_USER_INPUT`; no results → `[]`; unknown id → `null`.
-- [ ] Every Open-Meteo request has `timezone=GMT`; a DST week (fixture across 2026-10-25) keeps windows on local hours.
+- [ ] Every Open-Meteo request with time data has `timezone=GMT`; a DST week (fixture across 2026-10-25) keeps windows on local hours.
 - [ ] Recorded fixtures: Innsbruck skiing scored with `dataElevation` ≤ 2500; Kraków skiing and surfing `NOT_APPLICABLE`; Nazaré surfing scored; Zakopane skiing applicable.
 - [ ] Each failure row in the table has a test (MSW), incl. timeout.
 - [ ] Terrain numbers in config + `scoring.md` ("Needs PO/PM review"); D-022 (place list), D-023 (no cache) in `decisions.md`.
