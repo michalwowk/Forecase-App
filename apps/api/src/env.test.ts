@@ -3,7 +3,7 @@ import { parseEnv } from "./env.ts";
 
 describe("parseEnv", () => {
 	it("uses defaults when nothing is set", () => {
-		expect(parseEnv({})).toEqual({ APP_MODE: "development", PORT: 4000 });
+		expect(parseEnv({})).toEqual({ APP_MODE: "production", PORT: 4000 });
 	});
 
 	it("reads valid values", () => {

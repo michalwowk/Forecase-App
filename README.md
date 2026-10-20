@@ -32,7 +32,8 @@ pnpm dev          # API on :4000, web on http://localhost:5173
 
 - One app only: `pnpm --filter api dev` or `pnpm --filter web dev`.
 - Checks: `pnpm lint`, `pnpm typecheck`, `pnpm test`. CI runs the same on every PR.
-- Config is optional: see `apps/*/.env.example`. `APP_MODE` = `development` | `test` | `production`.
+- Config is optional: see `apps/*/.env.example`. `APP_MODE` = `development` | `test` | `production`; default `production`, `pnpm dev` uses `development`.
+- API on another port? Set `VITE_API_URL=http://localhost:<port>/graphql` for the web (the dev proxy targets :4000).
 
 ## Assumptions
 - No persistence. Open-Meteo only, called per request (4 calls per search).

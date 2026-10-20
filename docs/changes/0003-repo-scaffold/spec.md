@@ -13,7 +13,7 @@ Status: approved
 - Env validated with Zod at startup, one `env.ts` per app. Invalid env → exit with a clear message per bad key. Code imports the typed `env`, never `process.env`.
 - Web validates only public (client-exposed) vars.
 - Starts with no `.env`: defaults work. `.env.example` committed, `.env` gitignored. No secrets.
-- `APP_MODE = development | test | production`, default `development`. `NODE_ENV` is for tools only; our code never reads it.
+- `APP_MODE = development | test | production`, default `production` (safe default). `pnpm dev` sets `development` via a committed `.env.development`. `NODE_ENV` is for tools only; our code never reads it.
 
 | | development | test | production |
 |---|---|---|---|

@@ -50,7 +50,8 @@ Human approves every artifact. You never skip a gate.
 
 - Run tests, lint, typecheck (whatever exists).
 - Launch the `verifier` subagent with the change folder path.
-- Show the user its findings. Fix only what the user agrees to.
+- Run the built-in `/code-review` on the branch diff (skip for docs-only changes).
+- Show the user both reports. Fix only what the user agrees to.
 
 ## 6. Close
 

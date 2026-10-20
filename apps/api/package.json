@@ -4,10 +4,11 @@
 	"type": "module",
 	"scripts": {
 		"codegen": "graphql-codegen --config codegen.ts",
-		"dev": "pnpm codegen && node --watch --env-file-if-exists=.env src/index.ts",
+		"dev": "pnpm codegen && node --watch --env-file=.env.development --env-file-if-exists=.env src/index.ts",
 		"start": "pnpm codegen && node --env-file-if-exists=.env src/index.ts",
 		"test": "pnpm codegen && vitest run",
-		"typecheck": "pnpm codegen && tsc --noEmit"
+		"typecheck": "pnpm codegen && tsc --noEmit",
+		"lint": "biome check ."
 	},
 	"dependencies": {
 		"graphql": "^17.0.2",

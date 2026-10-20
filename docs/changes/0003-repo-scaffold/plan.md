@@ -40,3 +40,5 @@ Status: approved
 - MSW 3 API differs from v2: `onUnhandledFrame` (old `onUnhandledRequest` is silently ignored), GraphQL via `graphql.link()` from `msw/graphql`.
 - Web needs `@graphql-typed-document-node/core` (types for codegen output).
 - `.gitignore`: `!.env.example` and `generated/` added.
+- `APP_MODE` defaults to `production` (safe default); `pnpm dev` loads committed `apps/api/.env.development`.
+- Per-app `lint` scripts; `.gitattributes` forces LF (Windows CRLF noise).

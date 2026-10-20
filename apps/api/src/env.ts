@@ -2,9 +2,7 @@ import { z } from "zod";
 
 // The only place that reads process.env. Everything else imports `env`.
 const schema = z.object({
-	APP_MODE: z
-		.enum(["development", "test", "production"])
-		.default("development"),
+	APP_MODE: z.enum(["development", "test", "production"]).default("production"),
 	PORT: z.coerce.number().int().min(1).max(65535).default(4000),
 });
 
