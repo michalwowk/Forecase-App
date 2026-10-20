@@ -7,7 +7,9 @@
 	},
 	"scripts": {
 		"codegen": "graphql-codegen --config codegen.ts",
-		"dev": "pnpm codegen && tsx watch --env-file=.env.development --env-file-if-exists=.env src/index.ts",
+		"dev": "pnpm codegen && pnpm \"/^dev:/\"",
+		"dev:codegen": "node --watch-path=schema.graphql --watch-preserve-output node_modules/@graphql-codegen/cli/esm/bin.js --config codegen.ts",
+		"dev:server": "tsx watch --include schema.graphql --env-file=.env.development --env-file-if-exists=.env src/index.ts",
 		"build": "tsdown src/index.ts",
 		"start": "node --env-file-if-exists=.env dist/index.mjs",
 		"test": "pnpm codegen && vitest run",

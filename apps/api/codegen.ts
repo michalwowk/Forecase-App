@@ -5,7 +5,11 @@ const config: CodegenConfig = {
 	generates: {
 		"src/generated/graphql.ts": {
 			plugins: ["typescript", "typescript-resolvers"],
-			config: { useTypeImports: true },
+			config: {
+				useTypeImports: true,
+				// Every Query field must have a resolver; object fields keep default resolvers.
+				avoidOptionals: { query: true },
+			},
 		},
 	},
 	silent: true,
