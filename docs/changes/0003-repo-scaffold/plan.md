@@ -48,3 +48,4 @@ Status: approved
 - API built for prod: `tsdown` → `dist/index.mjs`, `start` runs it; dev uses `tsx watch` (Node cannot resolve `@/`). Reverses "no tsx". CI runs `pnpm build`.
 - pnpm 11 build-script gate: `allowBuilds.esbuild: false` (binary ships as optional dep).
 - Web depends on `@forecase/api` (`workspace:*`, dev); API `exports` only `schema.graphql`. Web codegen reads it from `node_modules`.
+- Web: `AppProviders` (`src/context/`) shared by `main.tsx` and tests; `renderWithProviders` in `src/test/render.tsx`.

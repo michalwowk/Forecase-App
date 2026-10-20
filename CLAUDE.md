@@ -46,3 +46,4 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 - Env: Zod-validated in each app's `src/env.ts`; read `env` from there. `APP_MODE`, not `NODE_ENV`.
 - GraphQL contract: `apps/api/schema.graphql`. Types are generated (gitignored) by every command.
 - Tests mock HTTP with MSW, handlers per domain in `apps/*/src/mocks/handlers/`.
+- Web component tests render with `renderWithProviders` (`@/test/render.tsx`). New app-wide providers go in `@/context/AppProviders.tsx` only.
