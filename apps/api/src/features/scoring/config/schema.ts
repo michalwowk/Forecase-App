@@ -9,10 +9,26 @@ import { ACTIVITIES, LABELS } from "@/features/scoring/types.ts";
 const hour = z.number().int().min(0).max(24);
 /** gt >, gte ≥, lt <, lte ≤. */
 const comparison = z.enum(["gt", "gte", "lt", "lte"]);
-/** true → sub-score = max − rule result (indoor: bad outside = good inside). */
+/**
+ * true → sub-score = max − rule result (indoor: bad outside = good inside).
+ * ```
+ *  band               band + invert
+ *  100 |   ____       100 |__      __
+ *      |  /    \          |  \    /
+ *    0 |_/      \_      0 |   \__/
+ * ```
+ */
 const invert = z.boolean().default(false);
 
-/** `bad` → 0, `good` → 100, linear between, clamped. */
+/**
+ * More is better. `bad` → 0, `good` → 100, linear between, clamped.
+ * ```
+ *  100 |          ______
+ *      |        /
+ *    0 |______/
+ *          bad   good          e.g. fresh snow 0 → 15 cm
+ * ```
+ */
 const higherIsBetter = z
 	.strictObject({
 		kind: z.literal("higherIsBetter"),
@@ -22,7 +38,15 @@ const higherIsBetter = z
 	})
 	.refine((r) => r.bad < r.good, "bad must be below good");
 
-/** `good` → 100, `bad` → 0, linear between, clamped. */
+/**
+ * Less is better. `good` → 100, `bad` → 0, linear between, clamped.
+ * ```
+ *  100 |______
+ *      |       \
+ *    0 |         \______
+ *          good   bad          e.g. gusts 30 → 60 km/h
+ * ```
+ */
 const lowerIsBetter = z
 	.strictObject({
 		kind: z.literal("lowerIsBetter"),
@@ -32,7 +56,18 @@ const lowerIsBetter = z
 	})
 	.refine((r) => r.good < r.bad, "good must be below bad");
 
-/** 100 between `idealMin` and `idealMax`, falling linearly to 0 at `zeroBelow` / `zeroAbove`. */
+/**
+ * Sweet spot. 100 between `idealMin` and `idealMax`, linear down to 0 at `zeroBelow` / `zeroAbove`.
+ * Sides can differ in slope (heat can punish faster than cold).
+ * ```
+ *  100 |         __________
+ *      |        /          \
+ *   50 |       /            \
+ *    0 |______/              \______
+ *        zeroBelow idealMin idealMax zeroAbove
+ *            0 °C    18 °C    24 °C    35 °C   e.g. outdoor feels-like: 9 °C → 50, 21 °C → 100
+ * ```
+ */
 const band = z
 	.strictObject({
 		kind: z.literal("band"),

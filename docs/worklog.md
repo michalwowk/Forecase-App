@@ -45,4 +45,5 @@ How the work went. One entry per session. What, how, what went wrong, what was c
   - Indoor: pure inverse rewards downpours, but you still have to get to the museum → travel cap 70; safety only via Unsafe.
   - Indoor not derived from outdoor: requirements may flip → own config with `invert` + `floor` (D-021). Window 10–20 for evening visits.
   - Config comments: first too many in the values file → field docs as JSDoc in `schema.ts`, values file stays lean.
+  - Rule kinds hard to grasp from text → ASCII graphs in the `schema.ts` JSDoc (next to the code beats a separate doc).
 - **Agent mistakes:** Gave an indoor example (drizzle → outdoor ~30) without computing it; real value ~43 → criteria rewritten with computed inputs. Didn't log corrections during the work — caught by me; now logged as they happen.
