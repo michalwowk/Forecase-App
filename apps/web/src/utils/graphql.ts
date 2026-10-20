@@ -1,5 +1,5 @@
-import { env } from "./env.ts";
-import type { TypedDocumentString } from "./generated/graphql.ts";
+import { env } from "#src/env.ts";
+import type { TypedDocumentString } from "#src/generated/graphql.ts";
 
 export async function request<TResult, TVariables>(
 	document: TypedDocumentString<TResult, TVariables>,

@@ -5,7 +5,7 @@ const config: CodegenConfig = {
 	generates: {
 		"src/generated/graphql.ts": {
 			plugins: ["typescript", "typescript-resolvers"],
-			config: { useTypeImports: true, enumsAsTypes: true },
+			config: { useTypeImports: true },
 		},
 	},
 	silent: true,

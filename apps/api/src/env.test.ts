@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseEnv } from "./env.ts";
+import { parseEnv } from "#src/env.ts";
 
 describe("parseEnv", () => {
 	it("uses defaults when nothing is set", () => {

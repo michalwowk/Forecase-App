@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createApp } from "./server.ts";
+import { createApp } from "#src/server.ts";
 
 describe("health query", () => {
 	it("returns ok over HTTP", async () => {

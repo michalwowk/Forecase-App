@@ -12,7 +12,7 @@ Status: approved
 ## Files
 - Root: `package.json`, `pnpm-workspace.yaml`, `.nvmrc`, `biome.json`, `tsconfig.base.json`, `.gitignore`.
 - `apps/api`: `src/{env,logger,schema,server,index}.ts`, `schema.graphql`, `codegen.ts`, `mocks/`, tests, `.env.example`.
-- `apps/web`: `src/{env,graphql,App}.tsx|ts`, `vite.config.ts`, `codegen.ts`, `mocks/`, tests, `.env.example`.
+- `apps/web`: `src/{env,App,main}`, `src/features/health/components/`, `src/utils/graphql.ts`, `vite.config.ts`, `codegen.ts`, `mocks/`, tests, `.env.example`.
 - `.github/workflows/ci.yml`.
 - `CLAUDE.md` (Commands), `README.md` (How to run, Cut).
 
@@ -42,3 +42,7 @@ Status: approved
 - `.gitignore`: `!.env.example` and `generated/` added.
 - `APP_MODE` defaults to `production` (safe default); `pnpm dev` loads committed `apps/api/.env.development`.
 - Per-app `lint` scripts; `.gitattributes` forces LF (Windows CRLF noise).
+- /simplify: `z.prettifyError` replaces hand-written env error format; Biome config trimmed to non-defaults; `start` skips codegen (types only).
+- Web `src/` follows `features/<feature>/<concern>/` + shared `utils/` (user rule, in `CLAUDE.md`).
+- Absolute imports via package.json `imports` (`#src/*`, `#mocks/*`): native in Node, TS, Vite; no alias config.
+- Web depends on `@forecase/api` (`workspace:*`, dev); API `exports` only `schema.graphql`. Web codegen reads it from `node_modules`.

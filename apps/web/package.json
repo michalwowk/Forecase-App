@@ -2,12 +2,16 @@
 	"name": "@forecase/web",
 	"private": true,
 	"type": "module",
+	"imports": {
+		"#src/*": "./src/*",
+		"#mocks/*": "./mocks/*"
+	},
 	"scripts": {
 		"codegen": "graphql-codegen --config codegen.ts",
 		"dev": "pnpm codegen && vite",
 		"build": "pnpm codegen && vite build",
 		"test": "pnpm codegen && vitest run",
-		"typecheck": "pnpm codegen && tsc --noEmit",
+		"typecheck": "pnpm codegen && tsc",
 		"lint": "biome check ."
 	},
 	"dependencies": {
@@ -17,6 +21,7 @@
 		"zod": "^4.6.7"
 	},
 	"devDependencies": {
+		"@forecase/api": "workspace:*",
 		"@graphql-codegen/cli": "^7.4.6",
 		"@graphql-codegen/client-preset": "^6.2.3",
 		"@graphql-typed-document-node/core": "^3.2.0",

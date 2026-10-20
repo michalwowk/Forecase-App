@@ -2,12 +2,19 @@
 	"name": "@forecase/api",
 	"private": true,
 	"type": "module",
+	"imports": {
+		"#src/*": "./src/*",
+		"#mocks/*": "./mocks/*"
+	},
+	"exports": {
+		"./schema.graphql": "./schema.graphql"
+	},
 	"scripts": {
 		"codegen": "graphql-codegen --config codegen.ts",
 		"dev": "pnpm codegen && node --watch --env-file=.env.development --env-file-if-exists=.env src/index.ts",
-		"start": "pnpm codegen && node --env-file-if-exists=.env src/index.ts",
+		"start": "node --env-file-if-exists=.env src/index.ts",
 		"test": "pnpm codegen && vitest run",
-		"typecheck": "pnpm codegen && tsc --noEmit",
+		"typecheck": "pnpm codegen && tsc",
 		"lint": "biome check ."
 	},
 	"dependencies": {

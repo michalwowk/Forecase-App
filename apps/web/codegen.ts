@@ -1,14 +1,13 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-	schema: "../api/schema.graphql",
+	schema: "node_modules/@forecase/api/schema.graphql",
 	documents: ["src/**/*.{ts,tsx}", "!src/generated/**"],
 	generates: {
 		"src/generated/": {
 			preset: "client",
 			config: {
 				useTypeImports: true,
-				enumsAsTypes: true,
 				documentMode: "string",
 			},
 		},

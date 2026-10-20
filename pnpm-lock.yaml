@@ -67,6 +67,9 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
+      '@forecase/api':
+        specifier: workspace:*
+        version: link:../api
       '@graphql-codegen/cli':
         specifier: ^7.4.6
         version: 7.4.6(@types/node@24.19.2)(graphql@17.0.2)(typescript@7.0.2)

@@ -1,5 +1,8 @@
+import { setupServer } from "msw/node";
 import { afterAll, afterEach, beforeAll } from "vitest";
-import { server } from "./server.ts";
+import { handlers } from "#mocks/handlers/index.ts";
+
+const server = setupServer(...handlers);
 
 // Any outbound request without a handler fails the test.
 beforeAll(() => server.listen({ onUnhandledFrame: "error" }));

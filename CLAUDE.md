@@ -24,6 +24,8 @@ Rules for agents in this repo. Short. Add a rule when the same mistake happens t
 ## Code
 - Don't weaken or delete tests to make them pass.
 - No secrets in code or docs.
+- Web `src/`: `features/<feature>/<concern>/` (e.g. `features/health/components/`). Shared code in top-level `components/`, `hooks/`, `context/`, `utils/`. Create a folder only when it has a file.
+- Imports inside an app are absolute: `#src/...`, `#mocks/...` (package.json `imports`). No `./` or `../`.
 
 ## Writing
 - English in all repo artifacts.
