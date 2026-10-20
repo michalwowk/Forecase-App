@@ -51,4 +51,5 @@ Status: approved
 - `pnpm test`, `pnpm typecheck`, `pnpm lint`. Manual query in GraphiQL (`pnpm dev`) for one live place.
 
 ## Divergence log
--
+- Step 4: orchestration (`forecast/service/placeForecast.ts`) and `forecast/fields.ts` written before the fixtures: recording ran our own client + orchestration from a throwaway script, so requests match production. Resolver in step 6 only maps it to GraphQL.
+- `ForecastPoint.elevation` nullable → `nan` (model cell height) when the town height is unknown and the grid failed.

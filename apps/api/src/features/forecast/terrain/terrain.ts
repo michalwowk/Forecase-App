@@ -33,13 +33,14 @@ export function gridPoints(town: LatLon, config: TerrainConfig): LatLon[] {
 	);
 }
 
-/** Town height: Geocoding's value, or the nearest grid point when it's missing. */
+/** Town height: Geocoding's value, else the nearest grid point, else null (unknown). */
 export function townElevation(
 	town: LatLon,
 	geocoded: number | undefined,
-	grid: readonly GridPoint[],
-): number {
+	grid: readonly GridPoint[] | null,
+): number | null {
 	if (geocoded !== undefined && geocoded !== NO_ELEVATION) return geocoded;
+	if (!grid?.length) return null;
 	const distance = (p: LatLon) =>
 		(p.latitude - town.latitude) ** 2 + (p.longitude - town.longitude) ** 2;
 	const nearest = grid.reduce((a, b) => (distance(b) < distance(a) ? b : a));

@@ -44,6 +44,10 @@ describe("townElevation", () => {
 		expect(townElevation(town, undefined, grid)).toBe(584);
 		expect(townElevation(town, -9999, grid)).toBe(584);
 	});
+
+	it("unknown without Geocoding value and grid", () => {
+		expect(townElevation(town, undefined, null)).toBeNull();
+	});
 });
 
 describe("mountainPoint", () => {

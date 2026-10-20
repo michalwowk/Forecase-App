@@ -64,3 +64,4 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **I corrected the agent:** designed the schema REST-style (`week(placeId)`) → I gave it the Shopify GraphQL design tutorial to read first; redesigned around `Place`.
 - **I corrected the agent:** kept the 100-point elevation grid from D-012 → test app, fewer points; checked live and chose 5×5.
 - **Had to ask to understand:** how external APIs are tested (live vs mocks, versioning, Zod) → plan got a "Testing" section; the stale-fixtures risk read like live tests.
+- **I asked for:** after step 3, finish the build without further stops; take the recommended option each time.

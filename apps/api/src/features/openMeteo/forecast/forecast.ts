@@ -12,9 +12,12 @@ const URL_FORECAST = "https://api.open-meteo.com/v1/forecast";
 export interface ForecastPoint {
 	latitude: number;
 	longitude: number;
-	/** Metres. Forecast is corrected to this height (mountain point, D-012). */
-	elevation: number;
+	/** Metres. Forecast is corrected to this height (mountain point, D-012). null → model cell height. */
+	elevation: number | null;
 }
+
+/** Open-Meteo reads `nan` as "use the model cell height". */
+const elevationParam = (e: number | null) => (e === null ? "nan" : String(e));
 
 /** Hourly forecast for several points in one call; one series per point, same order. */
 export function fetchForecast(
@@ -25,7 +28,7 @@ export function fetchForecast(
 	const url = buildUrl(URL_FORECAST, {
 		latitude: points.map((p) => p.latitude).join(","),
 		longitude: points.map((p) => p.longitude).join(","),
-		elevation: points.map((p) => p.elevation).join(","),
+		elevation: points.map((p) => elevationParam(p.elevation)).join(","),
 		hourly: fields.join(","),
 		timezone: UTC,
 		start_hour: range.start,
