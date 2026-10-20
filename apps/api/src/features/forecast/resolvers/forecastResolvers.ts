@@ -2,6 +2,8 @@ import {
 	type PlaceForecast,
 	placeForecast,
 } from "@/features/forecast/service/placeForecast.ts";
+import { getPlace } from "@/features/openMeteo/geocoding/geocoding.ts";
+import { parsePlaceId } from "@/features/places/resolvers/placeResolvers.ts";
 import {
 	ACTIVITIES,
 	type Activity,
@@ -14,10 +16,9 @@ import type {
 	Activity as GqlActivity,
 	DayState as GqlDayState,
 	Label as GqlLabel,
-	PlaceResolvers,
-	WeekForecast,
+	QueryResolvers,
 } from "@/generated/graphql.ts";
-import { badUserInput, toGraphQLError } from "@/utils/graphqlErrors.ts";
+import { toGraphQLError } from "@/utils/graphqlErrors.ts";
 
 const STATES: Record<DayState, GqlDayState> = {
 	scored: "SCORED",
@@ -47,31 +48,29 @@ function toActivity(
 ): ActivityForecast {
 	const row = forecast.week.rows[activity];
 	const available = isAvailable(activity, forecast);
-	const best = row.days.find((d) => d.date === row.bestDay);
 	return {
 		activity: activity.toUpperCase() as GqlActivity,
 		available,
-		days: available ? row.days.map(toDay) : [],
-		bestDay: available && best ? toDay(best) : null,
 		dataElevation: activity === "skiing" ? forecast.dataElevation : null,
+		bestDay: available ? row.bestDay : null,
+		days: available ? row.days.map(toDay) : [],
 	};
 }
 
-export function toWeekForecast(forecast: PlaceForecast): WeekForecast {
-	return {
-		days: forecast.week.days,
-		activities: ACTIVITIES.map((a) => toActivity(a, forecast)),
-	};
-}
-
-export const placeForecastField: PlaceResolvers = {
-	forecast: (place, _, { now, forecastBudget }) => {
-		if (forecastBudget.left <= 0) {
-			throw badUserInput(
-				"Only one forecast per request: query place(id) instead",
-			);
+export const forecastQueries: Pick<QueryResolvers, "forecast"> = {
+	forecast: async (_, { placeId }, { now }) => {
+		const id = parsePlaceId(placeId);
+		if (id === null) return null;
+		try {
+			const place = await getPlace(id);
+			if (!place) return null;
+			const forecast = await placeForecast(place, now());
+			return {
+				place,
+				activities: ACTIVITIES.map((a) => toActivity(a, forecast)),
+			};
+		} catch (error) {
+			return toGraphQLError(error);
 		}
-		forecastBudget.left -= 1;
-		return placeForecast(place, now()).then(toWeekForecast, toGraphQLError);
 	},
 };

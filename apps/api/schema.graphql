@@ -6,67 +6,45 @@ type Query {
 	placeSearch(
 		"Name typed by the user. Prefix match; optional `, <country or region>` qualifier."
 		query: String!
-		"How many matches, 1–100."
-		first: Int! = 10
-		"ISO 3166-1 alpha-2, e.g. PL. Only places in that country."
-		countryCode: String
-		"Language of place names. UI texts stay English."
-		language: String! = "en"
 	): [Place!]!
-	"One place by id. Unknown id → null."
-	place(id: ID!): Place
+	"""
+	Next 7 days for a place from `placeSearch`, scored per activity. Unknown id → null.
+	"""
+	forecast(placeId: ID!): Forecast
 }
 
 type Health {
 	status: String!
 }
 
-interface Node {
-	id: ID!
-}
-
-type Place implements Node {
+type Place {
 	"GeoNames id."
 	id: ID!
 	name: String!
 	"First-level region, e.g. Tyrol."
 	region: String
 	country: String
-	countryCode: String
-	coordinates: Coordinates!
-	"IANA timezone, e.g. Europe/Vienna."
-	timezone: String!
-	"""
-	Next 7 days, scored per activity. Computed only when asked for.
-	null (with an UPSTREAM_UNAVAILABLE error) when the weather service is down.
-	"""
-	forecast: WeekForecast
 }
 
-type Coordinates {
-	latitude: Float!
-	longitude: Float!
+type Forecast {
+	place: Place!
+	"One row per activity: skiing, surfing, outdoor, indoor."
+	activities: [ActivityForecast!]!
 }
 
 "Local calendar date of the place, YYYY-MM-DD."
 scalar Date
 
-type WeekForecast {
-	"7 local days, starting tomorrow."
-	days: [Date!]!
-	"One row per activity: skiing, surfing, outdoor, indoor."
-	activities: [ActivityForecast!]!
-}
-
 type ActivityForecast {
 	activity: Activity!
 	"false → data temporarily unavailable; `days` is empty and `bestDay` null."
 	available: Boolean!
-	days: [DayForecast!]!
-	"Highest score of the week, earliest on a tie. null if no day reaches Fair."
-	bestDay: DayForecast
 	"Skiing only: height in metres the forecast is for (mountains nearby)."
 	dataElevation: Int
+	"Highest score of the week, earliest on a tie. null if no day reaches Fair."
+	bestDay: Date
+	"7 local days, starting tomorrow."
+	days: [DayForecast!]!
 }
 
 type DayForecast {
@@ -83,8 +61,6 @@ type DayForecast {
 }
 
 type KeyValue {
-	"Metric id from the scoring config, e.g. freshSnow."
-	metric: String!
 	label: String!
 	value: Float!
 	unit: String!

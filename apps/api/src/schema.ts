@@ -1,9 +1,8 @@
 import { readFileSync } from "node:fs";
 import { createSchema } from "graphql-yoga";
 import type { GraphQLContext } from "@/context/graphqlContext.ts";
-import { placeForecastField } from "@/features/forecast/resolvers/forecastResolvers.ts";
+import { forecastQueries } from "@/features/forecast/resolvers/forecastResolvers.ts";
 import {
-	nodeResolvers,
 	placeFields,
 	placeQueries,
 } from "@/features/places/resolvers/placeResolvers.ts";
@@ -15,15 +14,15 @@ const typeDefs = readFileSync(
 	"utf8",
 );
 
-// Each feature owns its resolvers; `Place` is shared by places (fields) and forecast.
+// Each feature owns its resolvers.
 const resolvers: Resolvers = {
 	Date: DateScalar,
 	Query: {
 		health: () => ({ status: "ok" }),
 		...placeQueries,
+		...forecastQueries,
 	},
-	Node: nodeResolvers,
-	Place: { ...placeFields, ...placeForecastField },
+	Place: placeFields,
 };
 
 export const schema = createSchema<GraphQLContext>({ typeDefs, resolvers });

@@ -8,17 +8,14 @@ import { errorCodes, execute } from "@/test/graphql.ts";
 
 const FORECAST = /* GraphQL */ `
 	query Forecast($id: ID!) {
-		place(id: $id) {
-			name
-			forecast {
-				days
-				activities {
-					activity
-					available
-					dataElevation
-					bestDay { date score label }
-					days { date state score label reasons keyValues { metric value unit } }
-				}
+		forecast(placeId: $id) {
+			place { id name region country }
+			activities {
+				activity
+				available
+				dataElevation
+				bestDay
+				days { date state score label reasons keyValues { label value unit } }
 			}
 		}
 	}
@@ -35,13 +32,13 @@ interface Row {
 	activity: string;
 	available: boolean;
 	dataElevation: number | null;
-	bestDay: { date: string; score: number } | null;
+	bestDay: string | null;
 	days: Day[];
 }
 interface Result {
-	place: {
-		name: string;
-		forecast: { days: string[]; activities: Row[] } | null;
+	forecast: {
+		place: { id: string; name: string; region: string; country: string };
+		activities: Row[];
 	} | null;
 }
 
@@ -55,26 +52,35 @@ const WEEK = [
 	"2026-10-27",
 ];
 
-async function forecastFor(place: keyof typeof FIXTURE_PLACES) {
-	const result = await execute<Result>(FORECAST, {
-		id: String(FIXTURE_PLACES[place]),
-	});
+/** Forecast by fixture name, or by a raw id for the unknown-id cases. */
+async function forecastFor(place: keyof typeof FIXTURE_PLACES | string) {
+	const id =
+		place in FIXTURE_PLACES
+			? String(FIXTURE_PLACES[place as keyof typeof FIXTURE_PLACES])
+			: place;
+	const result = await execute<Result>(FORECAST, { id });
 	const row = (activity: string) =>
-		result.data?.place?.forecast?.activities.find(
-			(a) => a.activity === activity,
-		);
+		result.data?.forecast?.activities.find((a) => a.activity === activity);
 	return { result, row };
 }
 
 const states = (row: Row | undefined) => row?.days.map((d) => d.state);
 const allNotApplicable = Array(7).fill("NOT_APPLICABLE");
 
-describe("Place.forecast on recorded data", () => {
-	it("Innsbruck: 7 days from tomorrow, 4 rows, skiing at the 2500 m cap, no sea", async () => {
+describe("forecast on recorded data", () => {
+	it("Innsbruck: place, 4 rows of 7 days from tomorrow, skiing at the 2500 m cap, no sea", async () => {
 		const { result, row } = await forecastFor("innsbruck");
 		expect(result.errors).toBeUndefined();
-		const forecast = result.data?.place?.forecast;
-		expect(forecast?.days).toEqual(WEEK);
+		const forecast = result.data?.forecast;
+		expect(forecast?.place).toEqual({
+			id: "2775220",
+			name: "Innsbruck",
+			region: "Tyrol",
+			country: "Austria",
+		});
+		for (const activity of forecast?.activities ?? []) {
+			expect(activity.days.map((d) => d.date)).toEqual(WEEK);
+		}
 		expect(forecast?.activities.map((a) => a.activity)).toEqual([
 			"SKIING",
 			"SURFING",
@@ -122,14 +128,13 @@ describe("Place.forecast on recorded data", () => {
 		expect(skiing?.days.every((d) => d.state !== "NOT_APPLICABLE")).toBe(true);
 	});
 
-	it("best day is one of the row's days, with label and score", async () => {
+	it("best day is the date of the row's top score", async () => {
 		const { row } = await forecastFor("innsbruck");
 		const outdoor = row("OUTDOOR");
-		const best = outdoor?.bestDay;
-		expect(best).not.toBeNull();
+		expect(outdoor?.bestDay).not.toBeNull();
 		const max = Math.max(...(outdoor?.days.map((d) => d.score ?? 0) ?? []));
+		const best = outdoor?.days.find((d) => d.date === outdoor.bestDay);
 		expect(best?.score).toBe(max);
-		expect(outdoor?.days.find((d) => d.date === best?.date)?.score).toBe(max);
 	});
 });
 
@@ -156,20 +161,20 @@ describe("Open-Meteo requests", () => {
 	});
 });
 
-describe("forecast budget", () => {
-	it("one forecast per request; the next one is BAD_USER_INPUT", async () => {
-		const result = await execute<{
-			a: { forecast: unknown } | null;
-			b: { forecast: unknown } | null;
-		}>(/* GraphQL */ `
-			{
-				a: place(id: "2775220") { forecast { days } }
-				b: place(id: "3094802") { forecast { days } }
-			}
-		`);
-		const forecasts = [result.data?.a?.forecast, result.data?.b?.forecast];
-		expect(forecasts.filter((f) => f !== null)).toHaveLength(1);
-		expect(errorCodes(result)).toEqual(["BAD_USER_INPUT"]);
+describe("unknown place", () => {
+	it.each(["999999999", "abc", "02775220", "99999999999"])(
+		"placeId %s → null",
+		async (id) => {
+			const { result } = await forecastFor(id);
+			expect(result).toEqual({ data: { forecast: null } });
+		},
+	);
+
+	it("Geocoding down → UPSTREAM_UNAVAILABLE", async () => {
+		server.use(http.get(URLS.get, () => HttpResponse.error()));
+		const { result } = await forecastFor("innsbruck");
+		expect(result.data).toEqual({ forecast: null });
+		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
 	});
 });
 
@@ -201,16 +206,14 @@ describe("failures", () => {
 		expect(row("SURFING")?.days.every((d) => d.state === "SCORED")).toBe(true);
 	});
 
-	it("Forecast down → place kept, forecast null, UPSTREAM_UNAVAILABLE at place.forecast", async () => {
+	it("Forecast down → forecast null, UPSTREAM_UNAVAILABLE", async () => {
 		server.use(
 			http.get(URLS.forecast, () => new HttpResponse(null, { status: 503 })),
 		);
 		const { result } = await forecastFor("innsbruck");
-		expect(result.data).toEqual({
-			place: { name: "Innsbruck", forecast: null },
-		});
+		expect(result.data).toEqual({ forecast: null });
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
-		expect(result.errors?.[0]?.path).toEqual(["place", "forecast"]);
+		expect(result.errors?.[0]?.path).toEqual(["forecast"]);
 	});
 
 	it("Forecast timeout → UPSTREAM_UNAVAILABLE", async () => {
@@ -221,7 +224,7 @@ describe("failures", () => {
 			}),
 		);
 		const { result } = await forecastFor("innsbruck");
-		expect(result.data?.place?.forecast).toBeNull();
+		expect(result.data?.forecast).toBeNull();
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
 	});
 
@@ -229,7 +232,7 @@ describe("failures", () => {
 		const [town] = fixture("innsbruck", "forecast") as unknown[];
 		server.use(http.get(URLS.forecast, () => HttpResponse.json(town as never)));
 		const { result } = await forecastFor("innsbruck");
-		expect(result.data?.place?.forecast).toBeNull();
+		expect(result.data?.forecast).toBeNull();
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
 	});
 
