@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { graphql } from "#src/generated/gql.ts";
-import { request } from "#src/utils/graphql.ts";
+import { graphql } from "@/generated/gql.ts";
+import { request } from "@/utils/graphql.ts";
 
 const HealthQuery = graphql(`
 	query Health {

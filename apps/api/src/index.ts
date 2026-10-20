@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
-import { env } from "#src/env.ts";
-import { logger } from "#src/logger.ts";
-import { createApp } from "#src/server.ts";
+import { env } from "@/env.ts";
+import { logger } from "@/logger.ts";
+import { createApp } from "@/server.ts";
 
 const app = createApp();
 

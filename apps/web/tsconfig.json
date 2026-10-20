@@ -4,7 +4,8 @@
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"jsx": "react-jsx",
-		"types": ["vite/client"]
+		"types": ["vite/client"],
+		"paths": { "@/*": ["./src/*"] }
 	},
-	"include": ["src", "mocks", "codegen.ts", "vite.config.ts"]
+	"include": ["src", "codegen.ts", "vite.config.ts"]
 }

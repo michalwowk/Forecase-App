@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
-import { api } from "#mocks/api.ts";
-import { server } from "#mocks/server.ts";
-import { HealthStatus } from "#src/features/health/components/HealthStatus.tsx";
+import { HealthStatus } from "@/features/health/components/HealthStatus.tsx";
+import { api } from "@/mocks/api.ts";
+import { server } from "@/mocks/server.ts";
 
 function renderHealth() {
 	const client = new QueryClient();

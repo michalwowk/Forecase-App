@@ -31,7 +31,8 @@ pnpm dev          # API on :4000, web on http://localhost:5173
 ```
 
 - One app only: `pnpm --filter api dev` or `pnpm --filter web dev`.
-- Checks: `pnpm lint`, `pnpm typecheck`, `pnpm test`. CI runs the same on every PR.
+- Checks: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. CI runs the same on every PR.
+- Production: `pnpm build`, then `pnpm --filter api start` (runs `apps/api/dist/`). Web output: `apps/web/dist/`.
 - Config is optional: see `apps/*/.env.example`. `APP_MODE` = `development` | `test` | `production`; default `production`, `pnpm dev` uses `development`.
 - API on another port? Set `VITE_API_URL=http://localhost:<port>/graphql` for the web (the dev proxy targets :4000).
 

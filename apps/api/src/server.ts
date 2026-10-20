@@ -1,8 +1,8 @@
 import { NoSchemaIntrospectionCustomRule } from "graphql";
 import { createYoga, type Plugin } from "graphql-yoga";
-import { env } from "#src/env.ts";
-import { logger } from "#src/logger.ts";
-import { schema } from "#src/schema.ts";
+import { env } from "@/env.ts";
+import { logger } from "@/logger.ts";
+import { schema } from "@/schema.ts";
 
 const isProduction = env.APP_MODE === "production";
 

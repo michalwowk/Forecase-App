@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseEnv } from "#src/env.ts";
+import { parseEnv } from "@/env.ts";
 
 describe("parseEnv", () => {
 	it("defaults the API URL to the dev proxy", () => {

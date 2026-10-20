@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { createSchema } from "graphql-yoga";
-import type { Resolvers } from "#src/generated/graphql.ts";
+import type { Resolvers } from "@/generated/graphql.ts";
 
 const typeDefs = readFileSync(
 	new URL("../schema.graphql", import.meta.url),

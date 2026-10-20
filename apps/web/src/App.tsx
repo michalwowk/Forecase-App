@@ -1,4 +1,4 @@
-import { HealthStatus } from "#src/features/health/components/HealthStatus.tsx";
+import { HealthStatus } from "@/features/health/components/HealthStatus.tsx";
 
 export function App() {
 	return (

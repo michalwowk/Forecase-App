@@ -2,10 +2,6 @@
 	"name": "@forecase/web",
 	"private": true,
 	"type": "module",
-	"imports": {
-		"#src/*": "./src/*",
-		"#mocks/*": "./mocks/*"
-	},
 	"scripts": {
 		"codegen": "graphql-codegen --config codegen.ts",
 		"dev": "pnpm codegen && vite",

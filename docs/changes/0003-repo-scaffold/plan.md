@@ -44,5 +44,7 @@ Status: approved
 - Per-app `lint` scripts; `.gitattributes` forces LF (Windows CRLF noise).
 - /simplify: `z.prettifyError` replaces hand-written env error format; Biome config trimmed to non-defaults; `start` skips codegen (types only).
 - Web `src/` follows `features/<feature>/<concern>/` + shared `utils/` (user rule, in `CLAUDE.md`).
-- Absolute imports via package.json `imports` (`#src/*`, `#mocks/*`): native in Node, TS, Vite; no alias config.
+- Absolute imports `@/*` → `src/*` (tsconfig `paths`, Vite `resolve.tsconfigPaths`); `mocks/` moved into `src/`.
+- API built for prod: `tsdown` → `dist/index.mjs`, `start` runs it; dev uses `tsx watch` (Node cannot resolve `@/`). Reverses "no tsx". CI runs `pnpm build`.
+- pnpm 11 build-script gate: `allowBuilds.esbuild: false` (binary ships as optional dep).
 - Web depends on `@forecase/api` (`workspace:*`, dev); API `exports` only `schema.graphql`. Web codegen reads it from `node_modules`.

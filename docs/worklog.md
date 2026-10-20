@@ -29,5 +29,5 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **How:** Grilled choices into the plan, one commit per layer, human review of the running app.
 - **Went wrong:** MSW 3 silently ignores the v2 option `onUnhandledRequest`. CRLF noise on Windows → `.gitattributes`.
 - **Changed after review:** `APP_MODE` defaults to `production`; `pnpm dev` loads `.env.development`.
-- **/simplify:** Zod `prettifyError`, Biome config trimmed to non-defaults, `start` without codegen, web moved to `features/` structure, absolute `#src/` imports.
+- **/simplify:** Zod `prettifyError`, Biome config trimmed to non-defaults, `start` without codegen, web moved to `features/` structure, absolute `@/` imports, API build (tsdown) + tsx dev.
 - **Cut:** codegen once per install (kept per command, explicit), API codegen removal, `.gitignore` env rework.

@@ -1,5 +1,5 @@
 import { pino } from "pino";
-import { env } from "#src/env.ts";
+import { env } from "@/env.ts";
 
 const levels = {
 	development: "debug",

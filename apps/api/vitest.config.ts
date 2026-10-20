@@ -1,8 +1,9 @@
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+	resolve: { tsconfigPaths: true },
 	test: {
 		env: { APP_MODE: "test" },
-		setupFiles: ["./mocks/setup.ts"],
+		setupFiles: ["./src/mocks/setup.ts"],
 	},
 });
