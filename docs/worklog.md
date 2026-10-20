@@ -74,3 +74,13 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **Went wrong:** agent dropped the 1-forecast limit, claiming aliases cost only 2 calls; review showed any number of aliases → limit restored.
 - **I corrected the agent:** the 0005 schema was too big for a BFF (search params, `Node`, coordinates, nested `Place.forecast`) → take a place, do the rest underneath.
 - **Didn't fit:** agent read my "tak" as option (b) (one query + alternatives); I meant to go back and chose (c) (two steps, slimmed).
+
+## 2026-10-20 — 0007 web-ui (in progress)
+- **I corrected the agent:**
+  - Agent proposed states/errors as a separate 0008 → all in 0007, 0008 cut.
+  - Plain CSS, no deps → Tailwind v4.
+  - Responsive table with horizontal scroll → desktop only, mobile out of scope (my call).
+  - State in memory → query and place in the URL.
+  - Agent answered in English → chat in Polish (memory rule ignored).
+  - Search on submit + list above the grid → combobox with debounce, picked place shown as selected.
+  - Agent planned no automatic retries → keep TanStack Query defaults.
