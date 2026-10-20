@@ -76,11 +76,11 @@ enum Label { POOR FAIR GOOD GREAT }
 - Web UI (0006), UI states (0007). i18n: `language` changes place names only (D-015).
 
 ## Acceptance criteria
-- [ ] `placeSearch(query: "Paris")` returns Open-Meteo order; `first`, `countryCode`, `language` reach the request.
-- [ ] Invalid args → `BAD_USER_INPUT`; no results → `[]`; unknown id → `null`.
-- [ ] Every Open-Meteo request with time data has `timezone=GMT`; a DST week (fixture across 2026-10-25) keeps windows on local hours.
-- [ ] Recorded fixtures: Innsbruck skiing scored with `dataElevation` ≤ 2500; Kraków skiing and surfing `NOT_APPLICABLE`; Nazaré surfing scored; Zakopane skiing applicable.
-- [ ] Each failure row in the table has a test (MSW), incl. timeout.
-- [ ] Terrain numbers in config + `scoring.md` ("Needs PO/PM review"); D-022 (place list), D-023 (no cache) in `decisions.md`.
-- [ ] UTC rule in the Open-Meteo module README + root `README.md` Assumptions; `vision.md` and `plan.md` (0007 row) updated.
-- [ ] `pnpm test`, `pnpm typecheck`, `pnpm lint` pass.
+- [x] `placeSearch(query: "Paris")` returns Open-Meteo order; `first`, `countryCode`, `language` reach the request.
+- [x] Invalid args → `BAD_USER_INPUT`; no results → `[]`; unknown id → `null`.
+- [x] Every Open-Meteo request with time data has `timezone=GMT`; a DST week (fixture across 2026-10-25) keeps windows on local hours.
+- [x] Recorded fixtures: Innsbruck skiing scored with `dataElevation` ≤ 2500; Kraków skiing and surfing `NOT_APPLICABLE`; Nazaré surfing scored; Zakopane skiing applicable.
+- [x] Each failure row in the table has a test (MSW), incl. timeout.
+- [x] Terrain numbers in config + `scoring.md` ("Needs PO/PM review"); D-022 (place list), D-023 (no cache) in `decisions.md`.
+- [x] UTC rule in the Open-Meteo module README + root `README.md` Assumptions; `vision.md` and `plan.md` (0007 row) updated.
+- [x] `pnpm test`, `pnpm typecheck`, `pnpm lint` pass.
