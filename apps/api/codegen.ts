@@ -9,6 +9,14 @@ const config: CodegenConfig = {
 				useTypeImports: true,
 				// Every Query field must have a resolver; object fields keep default resolvers.
 				avoidOptionals: { query: true },
+				// String unions, not TS enums (`erasableSyntaxOnly`).
+				enumsAsTypes: true,
+				scalars: { Date: "string" },
+				contextType: "@/context/graphqlContext.ts#GraphQLContext",
+				// Resolvers receive our internal objects; field resolvers map them.
+				mappers: {
+					Place: "@/features/openMeteo/geocoding/geocoding.ts#GeocodingPlace",
+				},
 			},
 		},
 	},
