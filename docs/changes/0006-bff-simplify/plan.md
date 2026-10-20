@@ -24,4 +24,5 @@ Approved together with the spec ("implement right away").
 - Spec acceptance criteria; `pnpm test`, `pnpm typecheck`, `pnpm lint`.
 
 ## Divergence log
-- None.
+- Code review: forecast budget kept (aliases can ask for many forecasts); `parsePlaceId` moved to `openMeteo/geocoding`; days mapped field by field.
+- Roadmap renumbered (web-ui 0007, states 0008, readme 0009). Older change docs keep their original numbers.

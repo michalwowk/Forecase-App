@@ -52,17 +52,15 @@ const WEEK = [
 	"2026-10-27",
 ];
 
-/** Forecast by fixture name, or by a raw id for the unknown-id cases. */
-async function forecastFor(place: keyof typeof FIXTURE_PLACES | string) {
-	const id =
-		place in FIXTURE_PLACES
-			? String(FIXTURE_PLACES[place as keyof typeof FIXTURE_PLACES])
-			: place;
+async function forecastById(id: string) {
 	const result = await execute<Result>(FORECAST, { id });
 	const row = (activity: string) =>
 		result.data?.forecast?.activities.find((a) => a.activity === activity);
 	return { result, row };
 }
+
+const forecastFor = (place: keyof typeof FIXTURE_PLACES) =>
+	forecastById(String(FIXTURE_PLACES[place]));
 
 const states = (row: Row | undefined) => row?.days.map((d) => d.state);
 const allNotApplicable = Array(7).fill("NOT_APPLICABLE");
@@ -165,7 +163,7 @@ describe("unknown place", () => {
 	it.each(["999999999", "abc", "02775220", "99999999999"])(
 		"placeId %s → null",
 		async (id) => {
-			const { result } = await forecastFor(id);
+			const { result } = await forecastById(id);
 			expect(result).toEqual({ data: { forecast: null } });
 		},
 	);
@@ -175,6 +173,20 @@ describe("unknown place", () => {
 		const { result } = await forecastFor("innsbruck");
 		expect(result.data).toEqual({ forecast: null });
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
+	});
+});
+
+describe("forecast budget", () => {
+	it("one forecast per request; an aliased second one is BAD_USER_INPUT", async () => {
+		const result = await execute<{ a: unknown; b: unknown }>(/* GraphQL */ `
+			{
+				a: forecast(placeId: "2775220") { place { name } }
+				b: forecast(placeId: "3094802") { place { name } }
+			}
+		`);
+		const forecasts = [result.data?.a, result.data?.b];
+		expect(forecasts.filter((f) => f !== null)).toHaveLength(1);
+		expect(errorCodes(result)).toEqual(["BAD_USER_INPUT"]);
 	});
 });
 

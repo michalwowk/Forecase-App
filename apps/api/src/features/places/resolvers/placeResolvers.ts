@@ -6,16 +6,8 @@ import { badUserInput, toGraphQLError } from "@/utils/graphqlErrors.ts";
 // D-025: the UI only sends what the user typed; the rest are backend constants.
 const SEARCH_RESULTS = 10;
 const SEARCH_LANGUAGE = "en"; // D-015: English only
-const MAX_INT32 = 2 ** 31 - 1; // Open-Meteo ids are Int32
 
 const query = z.string().trim().min(1, "query must not be blank");
-
-/** Canonical GeoNames id ("2775220", no leading zeros) as a number; anything else → null. */
-export function parsePlaceId(id: string): number | null {
-	if (!/^[1-9]\d*$/.test(id)) return null;
-	const n = Number(id);
-	return n <= MAX_INT32 ? n : null;
-}
 
 export const placeQueries: Pick<QueryResolvers, "placeSearch"> = {
 	placeSearch: async (_, args) => {

@@ -11,7 +11,7 @@ Status: approved
 - `placeSearch(query)` → list of places (id, name, region, country). 10 results, English, Open-Meteo order — constants in the API.
 - `forecast(placeId)` → place + 4 activity rows (activity, available, dataElevation, bestDay date, days). Unknown id → `null`.
 - Day: date, state, score, label, reasons, keyValues (label, value, unit).
-- Removed: search args, `Node`, `place(id)`, `Place.forecast`, coordinates, timezone, countryCode, `WeekForecast.days`, `keyValues.metric`, `bestDay` as an object, 1-forecast-per-request budget.
+- Removed: search args, `Node`, `place(id)`, `Place.forecast`, coordinates, timezone, countryCode, `WeekForecast.days`, `keyValues.metric`, `bestDay` as an object.
 
 ## Users / systems affected
 - `apps/api`: `schema.graphql`, resolvers, GraphQL tests. Open-Meteo client, terrain, time, scoring unchanged.

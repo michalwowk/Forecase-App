@@ -70,6 +70,7 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 
 ## 2026-10-20 — 0006 bff-simplify (close)
 - **What:** GraphQL down to `placeSearch(query)` + `forecast(placeId)`; only fields the UI shows. D-025. Layers below unchanged. 144 tests (removed-feature tests dropped, the rest moved).
-- **How:** 4 intent questions, spec without grilling, plan approved with the spec ("implement right away").
+- **How:** 4 intent questions, spec without grilling, plan approved with the spec ("implement right away"). `verifier` ready, `/code-review` 6 findings, 4 fixed.
+- **Went wrong:** agent dropped the 1-forecast limit, claiming aliases cost only 2 calls; review showed any number of aliases → limit restored.
 - **I corrected the agent:** the 0005 schema was too big for a BFF (search params, `Node`, coordinates, nested `Place.forecast`) → take a place, do the rest underneath.
 - **Didn't fit:** agent read my "tak" as option (b) (one query + alternatives); I meant to go back and chose (c) (two steps, slimmed).

@@ -76,5 +76,6 @@ describe("placeSearch", () => {
 		);
 		const result = await execute(SEARCH, { query: "Paris" });
 		expect(errorCodes(result)).toEqual(["UPSTREAM_UNAVAILABLE"]);
+		expect(result.data).toBeNull();
 	});
 });

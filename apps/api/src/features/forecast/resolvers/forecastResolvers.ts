@@ -2,8 +2,10 @@ import {
 	type PlaceForecast,
 	placeForecast,
 } from "@/features/forecast/service/placeForecast.ts";
-import { getPlace } from "@/features/openMeteo/geocoding/geocoding.ts";
-import { parsePlaceId } from "@/features/places/resolvers/placeResolvers.ts";
+import {
+	getPlace,
+	parsePlaceId,
+} from "@/features/openMeteo/geocoding/geocoding.ts";
 import {
 	ACTIVITIES,
 	type Activity,
@@ -18,7 +20,7 @@ import type {
 	Label as GqlLabel,
 	QueryResolvers,
 } from "@/generated/graphql.ts";
-import { toGraphQLError } from "@/utils/graphqlErrors.ts";
+import { badUserInput, toGraphQLError } from "@/utils/graphqlErrors.ts";
 
 const STATES: Record<DayState, GqlDayState> = {
 	scored: "SCORED",
@@ -27,11 +29,19 @@ const STATES: Record<DayState, GqlDayState> = {
 	unsafe: "UNSAFE",
 };
 
+/** Only the fields the schema exposes (D-025); internal ids like `metric` stay behind. */
 function toDay(day: DayResult): DayForecast {
 	return {
-		...day,
+		date: day.date,
 		state: STATES[day.state],
+		score: day.score,
 		label: day.label && (day.label.toUpperCase() as GqlLabel),
+		reasons: day.reasons,
+		keyValues: day.keyValues.map(({ label, value, unit }) => ({
+			label,
+			value,
+			unit,
+		})),
 	};
 }
 
@@ -58,7 +68,12 @@ function toActivity(
 }
 
 export const forecastQueries: Pick<QueryResolvers, "forecast"> = {
-	forecast: async (_, { placeId }, { now }) => {
+	forecast: async (_, { placeId }, { now, forecastBudget }) => {
+		// Aliases could ask for many forecasts at once; each costs 4 Open-Meteo calls.
+		if (forecastBudget.left <= 0) {
+			throw badUserInput("Only one forecast per request");
+		}
+		forecastBudget.left -= 1;
 		const id = parsePlaceId(placeId);
 		if (id === null) return null;
 		try {

@@ -40,8 +40,9 @@ enum Activity / DayState / Label        # unchanged
 | Unknown or non-canonical `placeId` | `null` |
 | Geocoding or Forecast down | `UPSTREAM_UNAVAILABLE`, field `null` |
 | Marine / Elevation down | that row `available: false` |
+| 2nd `forecast` in one request (aliases) | `BAD_USER_INPUT` |
 - `forecast` fetches the place by id, then the week (same calls as 0005).
-- Removed: `place(id)`, `Place.forecast`, `Node`, search args, coordinates, timezone, countryCode, `WeekForecast.days`, `keyValues.metric`, `bestDay` object, forecast budget.
+- Removed: `place(id)`, `Place.forecast`, `Node`, search args, coordinates, timezone, countryCode, `WeekForecast.days`, `keyValues.metric`, `bestDay` object.
 
 ## Out of scope
 - Changes below the GraphQL layer. Web UI (0007).
