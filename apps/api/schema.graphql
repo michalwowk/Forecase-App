@@ -1,7 +1,115 @@
 type Query {
 	health: Health!
+	"""
+	Places matching `query`, in Open-Meteo order (no filter, no sort). The user picks one.
+	"""
+	placeSearch(
+		"Name typed by the user. Prefix match; optional `, <country or region>` qualifier."
+		query: String!
+		"How many matches, 1–100."
+		first: Int! = 10
+		"ISO 3166-1 alpha-2, e.g. PL. Only places in that country."
+		countryCode: String
+		"Language of place names. UI texts stay English."
+		language: String! = "en"
+	): [Place!]!
+	"One place by id. Unknown id → null."
+	place(id: ID!): Place
 }
 
 type Health {
 	status: String!
+}
+
+interface Node {
+	id: ID!
+}
+
+type Place implements Node {
+	"GeoNames id."
+	id: ID!
+	name: String!
+	"First-level region, e.g. Tyrol."
+	region: String
+	country: String
+	countryCode: String
+	coordinates: Coordinates!
+	"IANA timezone, e.g. Europe/Vienna."
+	timezone: String!
+	"""
+	Next 7 days, scored per activity. Computed only when asked for.
+	null (with an UPSTREAM_UNAVAILABLE error) when the weather service is down.
+	"""
+	forecast: WeekForecast
+}
+
+type Coordinates {
+	latitude: Float!
+	longitude: Float!
+}
+
+"Local calendar date of the place, YYYY-MM-DD."
+scalar Date
+
+type WeekForecast {
+	"7 local days, starting tomorrow."
+	days: [Date!]!
+	"One row per activity: skiing, surfing, outdoor, indoor."
+	activities: [ActivityForecast!]!
+}
+
+type ActivityForecast {
+	activity: Activity!
+	"false → data temporarily unavailable; `days` is empty and `bestDay` null."
+	available: Boolean!
+	days: [DayForecast!]!
+	"Highest score of the week, earliest on a tie. null if no day reaches Fair."
+	bestDay: DayForecast
+	"Skiing only: height in metres the forecast is for (mountains nearby)."
+	dataElevation: Int
+}
+
+type DayForecast {
+	date: Date!
+	state: DayState!
+	"0–100. null unless state is SCORED."
+	score: Int
+	"null unless state is SCORED."
+	label: Label
+	"1–3 English reasons."
+	reasons: [String!]!
+	"Raw values behind the score."
+	keyValues: [KeyValue!]!
+}
+
+type KeyValue {
+	"Metric id from the scoring config, e.g. freshSnow."
+	metric: String!
+	label: String!
+	value: Float!
+	unit: String!
+}
+
+enum Activity {
+	SKIING
+	SURFING
+	OUTDOOR
+	INDOOR
+}
+
+enum DayState {
+	SCORED
+	"The activity can't happen here (no sea, no mountains)."
+	NOT_APPLICABLE
+	"Too many forecast hours missing to judge the day."
+	NO_DATA
+	"Dangerous weather — stay home."
+	UNSAFE
+}
+
+enum Label {
+	POOR
+	FAIR
+	GOOD
+	GREAT
 }

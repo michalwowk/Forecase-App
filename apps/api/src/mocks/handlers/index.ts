@@ -1,4 +1,5 @@
 import type { AnyHandler } from "msw";
+import { openMeteoHandlers } from "@/mocks/handlers/open-meteo.ts";
 
-// One file per outbound domain, e.g. `open-meteo.ts` (from 0005).
-export const handlers: AnyHandler[] = [];
+// One file per outbound domain.
+export const handlers: AnyHandler[] = [...openMeteoHandlers];

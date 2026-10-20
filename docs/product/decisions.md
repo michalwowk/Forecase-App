@@ -147,3 +147,26 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Why:** No code link to outdoor, so either can change alone. Downpours still make the trip hard. 10–20 covers museum hours plus evening visits.
 - **Rejected:** Formula from the outdoor result (couples the two); pure inverse (downpour = best museum day).
 - **Change:** 0004. Needs PO/PM review (no opening-hours data).
+
+## D-022 Place list, user picks (2026-10-20)
+
+- **Decision:** Search shows Geocoding matches as-is, in Open-Meteo order, no filter or sort. The user always picks one, even if there is one match. Search takes Open-Meteo's params: count (default 10), country code, language (default `en`). Supersedes D-009.
+- **Why:** Simple, predictable, same as the Open-Meteo site. No ranking rules to explain or tune.
+- **Rejected:** Auto top match + "Not this place?" (D-009); own ranking (settlements only, by population).
+- **Note:** `language` changes place names only; UI stays English (D-015).
+- **Change:** 0005
+
+## D-023 No cache (2026-10-20)
+
+- **Decision:** No cache for Open-Meteo calls, terrain included. Risk of hitting the free daily limit accepted.
+- **Why:** MVP / test app. Fewer moving parts. The 5×5 grid (D-024) also cuts the cost of a search.
+- **Rejected:** In-memory terrain cache; cache with short TTL for forecasts.
+- **Change:** 0005
+
+## D-024 Mountain point numbers (2026-10-20)
+
+- **Decision:** Elevation grid 5×5 (25 points), ±20 km around the town. Mountain point = highest point, capped at 2500 m. Skiing "Not applicable" if the highest point is < 1000 m or < town + 500 m. Refines D-012 (was 100 points).
+- **Why:** Test app, fewer points. Live check: 5×5 keeps Zakopane (1687 m) and Innsbruck (2894 m); 3×3 drops Zakopane to 1082 m. Above ~2500 m is mostly rock and glacier, not pistes.
+- **Weak spot:** a sparse grid can miss a peak → data for a lower height than the pistes.
+- **Note:** Week fetched by UTC `start_hour`/`end_hour`, not `forecast_days=8` (D-016 note). Goal of D-016 unchanged.
+- **Change:** 0005. Needs PO/PM review.

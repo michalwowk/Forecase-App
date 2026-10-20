@@ -1,0 +1,19 @@
+{
+	"id": 2775220,
+	"name": "Innsbruck",
+	"latitude": 47.26266,
+	"longitude": 11.39454,
+	"elevation": 570,
+	"feature_code": "PPLA",
+	"country_code": "AT",
+	"admin1_id": 2763586,
+	"admin2_id": 2775216,
+	"admin3_id": 7871498,
+	"timezone": "Europe/Vienna",
+	"population": 132493,
+	"country_id": 2782113,
+	"country": "Austria",
+	"admin1": "Tyrol",
+	"admin2": "Innsbruck Stadt",
+	"admin3": "Innsbruck"
+}

@@ -61,6 +61,14 @@ export const defaultConfig = parseScoringConfig({
 		offshoreMinAngle: 120,
 		factors: { onshore: 1, cross: 0.7, offshore: 0.4, noBearing: 1 },
 	},
+	terrain: {
+		// D-024
+		gridSize: 5,
+		radiusKm: 20,
+		maxElevation: 2500,
+		minElevation: 1000,
+		minRise: 500,
+	},
 	activities: {
 		skiing: {
 			window: { start: 9, end: 16 },

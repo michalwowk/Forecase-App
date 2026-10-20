@@ -105,6 +105,15 @@ describe("scoring config", () => {
 		expect(() => parseScoringConfig(config)).toThrow(/floor must be within/);
 	});
 
+	it("rejects a terrain minElevation above maxElevation", () => {
+		const config = withChange((c) => {
+			c.terrain.minElevation = 3000;
+		});
+		expect(() => parseScoringConfig(config)).toThrow(
+			/minElevation must not exceed/,
+		);
+	});
+
 	it("rejects typos in keys", () => {
 		const config = withChange((c) => {
 			(c.week as Record<string, unknown>).lenght = 7;

@@ -52,3 +52,18 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **I asked for (readability):** `/simplify` before going on, and a module README readable in under 10 minutes.
 - **Dropped:** asked for a 200-city calibration run; agent flagged it was out of scope (0005) and could turn absolute scores relative (D-011) → I chose the review fixes only. Logged as an idea for 0005.
 - **Walkthrough:** asked to be walked through the code step by step; had to ask twice for `scoreWeek` itself — agent jumped to helpers before explaining the flow. Found on the way: "Calm wind" at 40 km/h gusts → every reason text now shows its value.
+
+## 2026-10-20 — 0005 graphql-api (close)
+- **What:** GraphQL API: `placeSearch`, `place(id)`, `Place.forecast` (4 × 7 grid) on live Open-Meteo. Client with timeout + Zod, UTC-only calls, 5×5 terrain grid. D-022…D-024. 150 tests.
+- **How:** One question at a time. Live curl before each data call (ids, UTC hours, gaps, grid sizes). Schema redesigned after the Shopify tutorial. Fixtures recorded with our own client. `verifier` (ready), `/code-review` (10 findings, 7 fixed).
+- **Went wrong:** Wrong guess of a region name in a test (real fixture won). Longitude wrap added float noise to every grid → wrap only out of range. A test server stayed up on :4123 until killed by PID.
+- **Cut:** cache, retries, live contract test, `node(id)`, calibration on ~200 places, sea below 0 m.
+- **I corrected the agent:**
+  - Auto top match + ranked "Not this place?" (D-009) → plain list in Open-Meteo order, user picks.
+  - Fixed `count=10` → expose the Geocoding params (`count`, `countryCode`, `language`).
+  - Proposed an Elevation cache → we had agreed not to worry about limits.
+  - UTC rule in `CLAUDE.md` → it's for humans too; module README + root README.
+  - REST-style schema (`week(placeId)`) → I gave it the Shopify GraphQL design tutorial first; redesigned around `Place`.
+  - Kept the 100-point grid from D-012 → test app, fewer points; checked live, chose 5×5.
+- **Had to ask to understand:** a recap of the UI decisions; `Node` and id options (a/b/c); how external APIs are tested (live vs mocks, versioning, Zod) → plan got a "Testing" section.
+- **I asked for:** all Open-Meteo calls in UTC as a written rule; after step 3, finish without stops, take the recommended option.

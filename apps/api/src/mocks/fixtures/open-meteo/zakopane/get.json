@@ -1,0 +1,19 @@
+{
+	"id": 3080866,
+	"name": "Zakopane",
+	"latitude": 49.29899,
+	"longitude": 19.94885,
+	"elevation": 819,
+	"feature_code": "PPL",
+	"country_code": "PL",
+	"admin1_id": 858786,
+	"admin2_id": 6690164,
+	"admin3_id": 7531513,
+	"timezone": "Europe/Warsaw",
+	"population": 27266,
+	"country_id": 798544,
+	"country": "Poland",
+	"admin1": "Lesser Poland",
+	"admin2": "Tatra County",
+	"admin3": "Zakopane"
+}

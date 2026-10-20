@@ -240,6 +240,31 @@ export const scoringConfigSchema = z
 				noBearing: z.number().min(0),
 			}),
 		}),
+		/**
+		 * Mountain point for skiing (D-012, D-024): highest point of a square grid around the town.
+		 * ```
+		 *  · · · · ·   gridSize × gridSize points,
+		 *  · · · · ·   ±radiusKm from the town (●).
+		 *  · · ● · ·   Highest point, capped at maxElevation.
+		 *  · · · · ·   Not applicable if it is below minElevation
+		 *  · · · · ·   or less than minRise above the town.
+		 * ```
+		 */
+		terrain: z
+			.strictObject({
+				gridSize: z.number().int().min(2),
+				radiusKm: z.number().positive(),
+				/** Metres. Higher grid points are scored at this height. */
+				maxElevation: z.number().positive(),
+				/** Metres. */
+				minElevation: z.number().min(0),
+				/** Metres above the town. */
+				minRise: z.number().min(0),
+			})
+			.refine(
+				(t) => t.minElevation <= t.maxElevation,
+				"minElevation must not exceed maxElevation",
+			),
 		/** One entry per activity. */
 		activities: z.strictObject({
 			skiing: activitySchema,
