@@ -31,3 +31,18 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **Changed after review:** `APP_MODE` defaults to `production`; `pnpm dev` loads `.env.development`.
 - **/simplify:** Zod `prettifyError`, Biome config trimmed to non-defaults, `start` without codegen, web moved to `features/` structure, absolute `@/` imports, API build (tsdown) + tsx dev.
 - **Cut:** codegen once per install (kept per command, explicit), API codegen removal, `.gitignore` env rework.
+
+## 2026-10-20 — 0004 scoring-engine (in progress)
+- **What:** Intent, spec, plan approved. `scoring.md` with every rule and its "why". D-016…D-021. Config schema + default config.
+- **How:** One question at a time with a recommendation (5 intent, 16 spec, 3 plan). Live curl to check what the API can give before deciding surf wind.
+- **My corrections and why:**
+  - Strategy pattern raised by me → moved to the plan; spec stays about business rules.
+  - Today + day 8 (D-010) dropped → week starts tomorrow; "next 7 days" means planning ahead (D-016).
+  - "Easy to configure for business" → one Zod config, no numbers in logic.
+  - Surf wind: asked for the best the API allows instead of speed only → sea bearing from 0 m elevation points (D-020).
+  - Target user made explicit: data means different things to a pro and a hobbyist (D-018). Surf numbers are not my field → all numbers flagged "Needs PO/PM review".
+  - UV dropped: no real impact on sightseeing.
+  - Indoor: pure inverse rewards downpours, but you still have to get to the museum → travel cap 70; safety only via Unsafe.
+  - Indoor not derived from outdoor: requirements may flip → own config with `invert` + `floor` (D-021). Window 10–20 for evening visits.
+  - Config comments: first too many in the values file → field docs as JSDoc in `schema.ts`, values file stays lean.
+- **Agent mistakes:** Gave an indoor example (drizzle → outdoor ~30) without computing it; real value ~43 → criteria rewritten with computed inputs. Didn't log corrections during the work — caught by me; now logged as they happen.
