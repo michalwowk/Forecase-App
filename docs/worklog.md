@@ -32,9 +32,11 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **/simplify:** Zod `prettifyError`, Biome config trimmed to non-defaults, `start` without codegen, web moved to `features/` structure, absolute `@/` imports, API build (tsdown) + tsx dev.
 - **Cut:** codegen once per install (kept per command, explicit), API codegen removal, `.gitignore` env rework.
 
-## 2026-10-20 — 0004 scoring-engine (in progress)
-- **What:** Intent, spec, plan approved. `scoring.md`, D-016…D-021. Config schema, metric rules, days/windows/coverage.
-- **How:** One question at a time with a recommendation. Live curl before deciding surf wind.
+## 2026-10-20 — 0004 scoring-engine (close)
+- **What:** Pure `scoreWeek`: 7 days × 4 activities from hourly series. One Zod config, rules + weights in `scoring.md`, D-016…D-021, module README. 79 tests.
+- **How:** One question at a time with a recommendation. Live curl before deciding surf wind. Strategy pattern per activity and per rule kind. `/simplify`, `verifier` (ready), `/code-review` (10 findings, 7 fixed).
+- **Went wrong:** A Python heredoc ate backslashes in the ASCII graphs; an IDE save turned tabs into spaces — both caught by Biome/reading.
+- **Cut:** real-data calibration, sum scaling on gaps, unified caps/unsafe conditions, `surfWind` under surfing — notes in `docs/plan.md` for 0005 or later.
 - **I corrected the agent:**
   - Brought a tech choice (Strategy) into spec grilling → moved to plan.
   - Settled for "wind speed only" on surf → I asked what the API can really give; it found the sea bearing.

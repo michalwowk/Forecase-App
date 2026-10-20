@@ -49,13 +49,13 @@ DayResult  = { date; state: "scored"|"notApplicable"|"noData"|"unsafe"; score: n
 - Days from tomorrow (supersedes D-010 part) · Unsafe thresholds, gusts 100 km/h (refines D-011) · Target user · Scoring model + config + "Needs PO/PM review" · Surf wind from sea bearing · Indoor from own config with invert + floor, travel cap (refines D-013).
 
 ## Acceptance criteria
-- [ ] `scoreWeek` returns 7 days starting tomorrow, same dates in every row.
-- [ ] Hand-built days: ideal ski day → Great; 3 °C rain on 5 cm base → Poor; gusts 75 km/h → ≤ 30.
-- [ ] Surf: 1.5 m / 12 s / light offshore → Great; swell 3.5 m → ≤ 30; all-null marine → notApplicable.
-- [ ] Outdoor: sunny 21 °C dry → Great; 12 mm rain → ≤ 25. Indoor: ideal outdoor day → 40; 4 mm rain, 0 °C, no sun → Great; 15 mm rain → 70.
-- [ ] Each unsafe trigger → unsafe for every activity on that series; indoor logic imports nothing from outdoor.
-- [ ] Key metric < 75 % coverage → noData; missing auxiliary → scored with renormalised weights.
-- [ ] Reasons: 1–3 per day, cap reason first; bestDay tie → earliest; best below Fair → null.
-- [ ] Changing a config value changes the result without touching logic (test overrides config).
-- [ ] No numeric thresholds in logic files (reviewed by verifier).
-- [ ] `scoring.md` explains the pipeline and every number with a "why"; decisions logged.
+- [x] `scoreWeek` returns 7 days starting tomorrow, same dates in every row.
+- [x] Hand-built days: ideal ski day → Great; 3 °C rain on 5 cm base → Poor; gusts 75 km/h → ≤ 30.
+- [x] Surf: 1.5 m / 12 s / light offshore → Great; swell 3.5 m → ≤ 30; all-null marine → notApplicable.
+- [x] Outdoor: sunny 21 °C dry → Great; 12 mm rain → ≤ 25. Indoor: ideal outdoor day → 40; 4 mm rain, 0 °C, no sun → Great; 15 mm rain → 70.
+- [x] Each unsafe trigger → unsafe for every activity on that series; indoor logic imports nothing from outdoor.
+- [x] Key metric < 75 % coverage → noData; missing auxiliary → scored with renormalised weights.
+- [x] Reasons: 1–3 per day, cap reason first; bestDay tie → earliest; best below Fair → null.
+- [x] Changing a config value changes the result without touching logic (test overrides config).
+- [x] No numeric thresholds in logic files (reviewed by verifier).
+- [x] `scoring.md` explains the pipeline and every number with a "why"; decisions logged.

@@ -3,7 +3,7 @@
 Enter a city or town. See how good each of the next 7 days is for skiing, surfing, outdoor sightseeing and indoor sightseeing.
 Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. Frontend not chosen yet (React + TS is the default, see D-008).
 
-> Status: discovery done (change `0002`). App not built yet. See [roadmap](docs/plan.md).
+> Status: scoring engine done (change `0004`). No API endpoint or UI for it yet. See [roadmap](docs/plan.md).
 
 ## Where to find what
 

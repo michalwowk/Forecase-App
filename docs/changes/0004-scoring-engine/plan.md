@@ -16,7 +16,7 @@ Status: approved
 - `config/schema.ts`, `config/defaultConfig.ts` — Zod schema (weights sum to 1, caps, windows, floor, unsafe, labels, reason templates) + every number from `scoring.md`.
 - `rules/metricRules.ts` — L2 rule functions.
 - `activities/{skiing,surfing,outdoor,indoor,index}.ts` — L1 strategies.
-- `pipeline/{days,windows,coverage,unsafe,score,reasons,bestDay}.ts`.
+- `pipeline/{days,windows,values,unsafe,score,reasons,bestDay,compare,text}.ts` (final names; see divergence log).
 - `test/builders.ts` — hand-built hourly days. Tests next to files (`*.test.ts`).
 - Docs: `decisions.md` (6 decisions from spec), `data-selection.md` (drop `cloud_cover`, `uv_index`; wind direction vs sea bearing from elevation grid), `vision.md` Later (skill profiles, `is_day` windows), `CLAUDE.md` (API uses `features/` too).
 
