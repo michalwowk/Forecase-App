@@ -9,9 +9,10 @@ Status: `todo` · `doing` · `done` · `cut` (+ one-line reason). Order may chan
 | 0003 | repo-scaffold | Repo shape and stack, decided from discovery output | done |
 | 0004 | scoring-engine | Scoring rules per activity, pure functions + tests | done |
 | 0005 | graphql-api | Schema, resolvers, Open-Meteo client | done |
-| 0006 | web-ui | Search a place, show ranked days per activity | todo |
-| 0007 | states-and-errors | Loading, no matches, API failure, partial failure | todo |
-| 0008 | readme-final | Run steps, assumptions, cuts | todo |
+| 0006 | bff-simplify | Slimmer GraphQL BFF: take a place, the rest happens underneath | done |
+| 0007 | web-ui | Search a place, show ranked days per activity | todo |
+| 0008 | states-and-errors | Loading, no matches, API failure, partial failure | todo |
+| 0009 | readme-final | Run steps, assumptions, cuts | todo |
 
 ## Notes from 0004 (closed in 0005)
 - DST: fixed. All Open-Meteo calls in UTC, local time via `Intl`.
