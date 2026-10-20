@@ -31,3 +31,24 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **Changed after review:** `APP_MODE` defaults to `production`; `pnpm dev` loads `.env.development`.
 - **/simplify:** Zod `prettifyError`, Biome config trimmed to non-defaults, `start` without codegen, web moved to `features/` structure, absolute `@/` imports, API build (tsdown) + tsx dev.
 - **Cut:** codegen once per install (kept per command, explicit), API codegen removal, `.gitignore` env rework.
+
+## 2026-10-20 — 0004 scoring-engine (close)
+- **What:** Pure `scoreWeek`: 7 days × 4 activities from hourly series. One Zod config, rules + weights in `scoring.md`, D-016…D-021, module README. 79 tests.
+- **How:** One question at a time with a recommendation. Live curl before deciding surf wind. Strategy pattern per activity and per rule kind. `/simplify`, `verifier` (ready), `/code-review` (10 findings, 7 fixed).
+- **Went wrong:** A Python heredoc ate backslashes in the ASCII graphs; an IDE save turned tabs into spaces — both caught by Biome/reading.
+- **Cut:** real-data calibration, sum scaling on gaps, unified caps/unsafe conditions, `surfWind` under surfing — notes in `docs/plan.md` for 0005 or later.
+- **I corrected the agent:**
+  - Brought a tech choice (Strategy) into spec grilling → moved to plan.
+  - Settled for "wind speed only" on surf → I asked what the API can really give; it found the sea bearing.
+  - Didn't think about who the user is (pro vs hobbyist) → I raised it.
+  - Indoor as pure inverse of outdoor → ignored the trip to the museum and safety.
+  - Indoor coupled to outdoor → I asked for config only; requirements may flip.
+  - Copied the outdoor window to indoor → museums are also visited in the evening.
+  - Put an indoor example in the spec without computing it → wrong numbers, rewritten.
+  - Didn't log my corrections as we went → I had to ask.
+- **Didn't fit:** Too many comments in the values file → moved to `schema.ts` JSDoc.
+- **Had to ask to understand:** `invert`, `floor`, `band`, `aggregate`, config variables. New terms came without explanation → asked for ASCII graphs in the schema.
+- **I asked for:** easy config for business; "Needs PO/PM review" on numbers I can't judge; simple scoring docs with weights; the rest of the plan in one go instead of step-by-step stops.
+- **I asked for (readability):** `/simplify` before going on, and a module README readable in under 10 minutes.
+- **Dropped:** asked for a 200-city calibration run; agent flagged it was out of scope (0005) and could turn absolute scores relative (D-011) → I chose the review fixes only. Logged as an idea for 0005.
+- **Walkthrough:** asked to be walked through the code step by step; had to ask twice for `scoreWeek` itself — agent jumped to helpers before explaining the flow. Found on the way: "Calm wind" at 40 km/h gusts → every reason text now shows its value.

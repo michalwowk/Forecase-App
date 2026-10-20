@@ -106,3 +106,44 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Decision:** English UI only, no i18n. Metric units only, no toggle. Hourly chart in day detail is a later idea.
 - **Why:** MVP. None of them changes the ranking.
 - **Change:** 0002
+
+## D-016 Days start tomorrow (2026-10-20)
+
+- **Decision:** The week is tomorrow + 6 local days. Today never shows. Supersedes the "today" and "day 8" part of D-010; hour windows stay.
+- **Why:** "Next 7 days" means planning ahead. Partial today windows add rules for little value.
+- **Rejected:** Today while windows are open + day 8 (D-010); per-row day sets (breaks grid columns).
+- **Change:** 0004. Fetch `forecast_days=8` in 0005.
+
+## D-017 Unsafe thresholds (2026-10-20)
+
+- **Decision:** Unsafe if any window hour has weather_code 96/99, gusts ≥ 100 km/h, apparent temp ≥ 40 or ≤ −25 °C. Refines D-011: gusts at 100, not hurricane force (118).
+- **Why:** 118 km/h almost never occurs at ground level, so Unsafe would never fire. 100 km/h breaks trees.
+- **Change:** 0004. Needs PO/PM review.
+
+## D-018 Target user (2026-10-20)
+
+- **Decision:** Score for a recreational, intermediate user: piste skier, surfer on green waves, average tourist.
+- **Why:** App for most people. Safer to under-rate for a pro than over-rate for a beginner (a 4 m swell is Great for a pro, dangerous for most).
+- **Rejected:** Pro athletes; skill profiles with a toggle (Later).
+- **Change:** 0004. Needs PO/PM review.
+
+## D-019 Scoring model and config (2026-10-20)
+
+- **Decision:** Per metric: aggregate window hours, sub-score by rule (higher/lower is better, band, optional invert). Score = floor + weighted sum, then deal-breaker caps. All numbers in one Zod-validated config file. Dropped fields: `cloud_cover` (duplicates sunshine), `uv_index` (no real impact).
+- **Why:** Explainable ("35 % fresh snow"), caps catch day-killers, business changes one file.
+- **Rejected:** Plain weighted sum (masks closed lifts); product of sub-scores (hard to explain); runtime/admin config (no DB, not needed yet).
+- **Change:** 0004. **Needs PO/PM review:** every threshold and weight in `scoring.md` is a working value, not expert input.
+
+## D-020 Surf wind vs sea bearing (2026-10-20)
+
+- **Decision:** Wind is weighted by direction against the sea bearing (town → centre of 0 m points in the elevation grid): onshore 1.0, cross 0.7, offshore 0.4. No bearing → speed only.
+- **Why:** Offshore vs onshore needs coast orientation; the grid is fetched anyway for skiing (D-012).
+- **Rejected:** Swell direction as a proxy (offshore cell, oblique in bays); speed only.
+- **Change:** 0004 (rule), 0005 (bearing). Weak spots: lowlands ≤ 0 m, peninsulas.
+
+## D-021 Indoor from its own config (2026-10-20)
+
+- **Decision:** Indoor is a normal activity with its own config: outdoor's metrics inverted, floor 40, cap 70 on heavy rain, thunderstorm or gusts ≥ 60 km/h. Window 10–20. Refines D-013.
+- **Why:** No code link to outdoor, so either can change alone. Downpours still make the trip hard. 10–20 covers museum hours plus evening visits.
+- **Rejected:** Formula from the outdoor result (couples the two); pure inverse (downpour = best museum day).
+- **Change:** 0004. Needs PO/PM review (no opening-hours data).

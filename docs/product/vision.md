@@ -52,6 +52,8 @@
 
 ## Later
 - Hourly chart in day detail.
+- Skill profiles (beginner / advanced), esp. surfing (D-018).
+- Daylight-based windows (`is_day`).
 
 ## Stack
 - Fixed by brief: Node.js + GraphQL. Rest in `0003-repo-scaffold` (D-008).

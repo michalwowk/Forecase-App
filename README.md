@@ -3,13 +3,14 @@
 Enter a city or town. See how good each of the next 7 days is for skiing, surfing, outdoor sightseeing and indoor sightseeing.
 Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. Frontend not chosen yet (React + TS is the default, see D-008).
 
-> Status: discovery done (change `0002`). App not built yet. See [roadmap](docs/plan.md).
+> Status: scoring engine done (change `0004`). No API endpoint or UI for it yet. See [roadmap](docs/plan.md).
 
 ## Where to find what
 
 | Path | What |
 |---|---|
 | [`apps/api`](apps/api) | Node + GraphQL Yoga API. Contract: `schema.graphql` |
+| [`apps/api/src/features/scoring`](apps/api/src/features/scoring) | Scoring engine. Start with its [README](apps/api/src/features/scoring/README.md) |
 | [`apps/web`](apps/web) | React + Vite web app |
 | [`docs/plan.md`](docs/plan.md) | Roadmap of changes + status |
 | [`docs/changes/`](docs/changes/) | One folder per change: `intent.md`, `spec.md`, `plan.md` |
