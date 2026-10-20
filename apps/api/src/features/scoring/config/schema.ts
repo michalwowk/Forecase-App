@@ -180,6 +180,10 @@ const activitySchema = z
 	)
 	.refine((a) => a.metrics.some((m) => m.key), "at least one key metric")
 	.refine(
+		(a) => new Set(a.metrics.map((m) => m.id)).size === a.metrics.length,
+		"metric ids must be unique within an activity",
+	)
+	.refine(
 		(a) =>
 			a.caps.every(
 				(c) => c.kind !== "metric" || a.metrics.some((m) => m.id === c.metric),
@@ -246,6 +250,26 @@ export const scoringConfigSchema = z
 	})
 	.refine((c) => c.scale.min < c.scale.max, "scale min must be below max")
 	.refine(
+		(c) =>
+			LABELS.every((label, i) => {
+				const min = c.labels.find((l) => l.label === label)?.min;
+				const lower = c.labels.find((l) => l.label === LABELS[i - 1])?.min;
+				return min !== undefined && (lower === undefined || lower < min);
+			}),
+		"label mins must rise from Poor to Great",
+	)
+	.refine(
+		(c) => c.labels.some((l) => l.min <= c.scale.min),
+		"the lowest label must start at or below scale min",
+	)
+	.refine(
+		(c) =>
+			Object.values(c.activities).every(
+				(a) => a.floor >= c.scale.min && a.floor < c.scale.max,
+			),
+		"activity floor must be within the scale",
+	)
+	.refine(
 		(c) => new Set(c.labels.map((l) => l.label)).size === c.labels.length,
 		"each label must appear once",
 	)
@@ -265,7 +289,6 @@ export type ActivityConfig =
 	ScoringConfig["activities"][keyof ScoringConfig["activities"]];
 export type MetricConfig = ActivityConfig["metrics"][number];
 export type MetricRule = z.output<typeof metricRuleSchema>;
-export type CapConfig = ActivityConfig["caps"][number];
 export type UnsafeTrigger = ScoringConfig["unsafe"][number];
 
 export function parseScoringConfig(input: ScoringConfigInput): ScoringConfig {

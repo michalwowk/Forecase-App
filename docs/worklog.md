@@ -48,4 +48,5 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **Had to ask to understand:** `invert`, `floor`, `band`, `aggregate`, config variables. New terms came without explanation → asked for ASCII graphs in the schema.
 - **I asked for:** easy config for business; "Needs PO/PM review" on numbers I can't judge; simple scoring docs with weights; the rest of the plan in one go instead of step-by-step stops.
 - **I asked for (readability):** `/simplify` before going on, and a module README readable in under 10 minutes.
+- **Dropped:** asked for a 200-city calibration run; agent flagged it was out of scope (0005) and could turn absolute scores relative (D-011) → I chose the review fixes only. Logged as an idea for 0005.
 - **Walkthrough:** asked to be walked through the code step by step; had to ask twice for `scoreWeek` itself — agent jumped to helpers before explaining the flow. Found on the way: "Calm wind" at 40 km/h gusts → every reason text now shows its value.

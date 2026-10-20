@@ -106,8 +106,8 @@ function scoreDay(
 	}
 
 	// 5. Weighted score, lowered by any deal-breaker cap.
-	const caps = appliedCaps(activity.caps, metrics, series, window);
 	const raw = weightedScore(metrics, activity.floor, config.scale);
+	const caps = appliedCaps(activity.caps, metrics, series, window, raw);
 	const score = Math.round(Math.min(raw, ...caps.map((c) => c.cap)));
 
 	return {

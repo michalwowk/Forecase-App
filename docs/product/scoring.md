@@ -10,7 +10,7 @@ Target user: recreational, intermediate (skier on pistes, surfer on green waves,
 3. Each metric: window hours → one value (sum / max / mean) → sub-score 0–100 by its rule, linear between "bad" and "good". `invert` flips it (100 − sub-score).
 4. Score = floor + (100 − floor) × weighted sum. Floor is 0 except indoor. Deal-breakers cap it. Label: Poor 0–39 · Fair 40–59 · Good 60–79 · Great 80–100.
 5. Special states first: **Not applicable** (no sea / no mountains) → **No data** (key metric < 75 % of hours; missing helper metric is dropped, weights renormalised) → **Unsafe**.
-6. Reasons: caps first, then the metrics that moved the score most (either way); all neutral → the strongest one. Best day = top score, earliest on tie, none if below Fair.
+6. Reasons: caps that lowered the score first (their metric isn't repeated), then the metrics that moved the score most (either way); all neutral → the strongest one. Best day = top score, earliest on tie, none if below Fair.
 
 ## Unsafe (any window hour) — stay home
 | Trigger | Threshold | Why |

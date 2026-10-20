@@ -74,6 +74,37 @@ describe("scoring config", () => {
 		expect(() => parseScoringConfig(config)).toThrow(/unknown metric/);
 	});
 
+	it("rejects duplicate metric ids in an activity", () => {
+		const config = withChange((c) => {
+			const metric = c.activities.outdoor.metrics[1];
+			if (metric) metric.id = "precipitation";
+		});
+		expect(() => parseScoringConfig(config)).toThrow(/ids must be unique/);
+	});
+
+	it("rejects label mins that don't rise from Poor to Great", () => {
+		const config = withChange((c) => {
+			const fair = c.labels.find((l) => l.label === "Fair");
+			if (fair) fair.min = 70;
+		});
+		expect(() => parseScoringConfig(config)).toThrow(/label mins must rise/);
+	});
+
+	it("rejects a lowest label above the scale min", () => {
+		const config = withChange((c) => {
+			const poor = c.labels.find((l) => l.label === "Poor");
+			if (poor) poor.min = 10;
+		});
+		expect(() => parseScoringConfig(config)).toThrow(/lowest label/);
+	});
+
+	it("rejects a floor outside the scale", () => {
+		const config = withChange((c) => {
+			c.activities.indoor.floor = 120;
+		});
+		expect(() => parseScoringConfig(config)).toThrow(/floor must be within/);
+	});
+
 	it("rejects typos in keys", () => {
 		const config = withChange((c) => {
 			(c.week as Record<string, unknown>).lenght = 7;

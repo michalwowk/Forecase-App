@@ -23,6 +23,8 @@ export interface ScoredMetric {
 export interface AppliedCap {
 	cap: number;
 	reason: string;
+	/** The metric the cap checks, if any; its own reason is then left out. */
+	metricId?: string;
 }
 
 /** Spread the weight of missing metrics over the present ones. */
@@ -44,34 +46,38 @@ export function weightedScore(
 	return floor + (scale.max - floor) * share;
 }
 
-/** Reason text if the cap's condition holds, else null. */
-function capReason(
+/** The cap if its condition holds, else null. */
+function checkCap(
 	cap: ActivityConfig["caps"][number],
 	metrics: ScoredMetric[],
 	series: HourlySeries,
 	range: HourRange,
-): string | null {
+): AppliedCap | null {
 	if (cap.kind === "anyHourIn") {
-		return anyHourIn(series, cap.field, range, cap.values) ? cap.reason : null;
+		const hit = anyHourIn(series, cap.field, range, cap.values);
+		return hit ? { cap: cap.cap, reason: cap.reason } : null;
 	}
 	const scored = metrics.find((m) => m.metric.id === cap.metric);
 	if (!scored || !compare(cap.op, scored.value, cap.value)) return null;
-	return fillValue(cap.reason, scored.value, scored.metric.decimals);
+	const reason = fillValue(cap.reason, scored.value, scored.metric.decimals);
+	return { cap: cap.cap, reason, metricId: cap.metric };
 }
 
-/** Caps whose condition holds, lowest cap first. */
+/**
+ * Caps that actually lower `score`, lowest first.
+ * A cap above the score changes nothing, so it is not a reason either.
+ */
 export function appliedCaps(
 	caps: ActivityConfig["caps"],
 	metrics: ScoredMetric[],
 	series: HourlySeries,
 	range: HourRange,
+	score: number,
 ): AppliedCap[] {
-	const applied: AppliedCap[] = [];
-	for (const cap of caps) {
-		const reason = capReason(cap, metrics, series, range);
-		if (reason) applied.push({ cap: cap.cap, reason });
-	}
-	return applied.toSorted((a, b) => a.cap - b.cap);
+	return caps
+		.map((cap) => checkCap(cap, metrics, series, range))
+		.filter((c): c is AppliedCap => c !== null && c.cap < score)
+		.toSorted((a, b) => a.cap - b.cap);
 }
 
 /** The highest label whose `min` the score reaches. */

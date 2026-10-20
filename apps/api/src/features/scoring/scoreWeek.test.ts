@@ -138,7 +138,15 @@ describe("scoreWeek — skiing", () => {
 
 	it("3 °C rain on a 5 cm base → Poor, capped by no snow base", () => {
 		const d = day(
-			week({ mountain: { snowfall: 0, snow_depth: 0.05, temperature_2m: 3 } }),
+			// Skiing has no rain metric; the warm, snowless day carries the score.
+			week({
+				mountain: {
+					snowfall: 0,
+					snow_depth: 0.05,
+					temperature_2m: 3,
+					precipitation: 1,
+				},
+			}),
 			"skiing",
 		);
 		expect(d.label).toBe("Poor");
@@ -292,9 +300,56 @@ describe("scoreWeek — unsafe", () => {
 		},
 	);
 
-	it("skiing checks the mountain point", () => {
-		const d = day(week({ mountain: { apparent_temperature: -26 } }), "skiing");
-		expect(d.state).toBe("unsafe");
+	it.each(cases)(
+		"%s on the mountain → skiing unsafe",
+		(_n, mountain, reason) => {
+			const result = week({ mountain });
+			expect(day(result, "skiing")).toMatchObject({
+				state: "unsafe",
+				reasons: [reason],
+			});
+			// The town is calm.
+			expect(day(result, "outdoor").state).toBe("scored");
+		},
+	);
+
+	it.each([
+		["gusts at 100 km/h", { wind_gusts_10m: atNoonTomorrow(100, 15) }],
+		["feels like 40 °C", { apparent_temperature: atNoonTomorrow(40, 21) }],
+		["feels like −25 °C", { apparent_temperature: atNoonTomorrow(-25, 21) }],
+	])("exactly at the limit (%s) → unsafe", (_n, town) => {
+		expect(day(week({ town }), "outdoor").state).toBe("unsafe");
+	});
+});
+
+describe("scoreWeek — caps at their limits", () => {
+	it("rain exactly 10 mm → outdoor capped at 25", () => {
+		// 1.25 mm × 8 h = 10 mm. Uncapped it would be 65.
+		const d = day(week({ town: { precipitation: 1.25 } }), "outdoor");
+		expect(d.score).toBe(25);
+	});
+
+	it("swell exactly 3.0 m → surfing capped at 30", () => {
+		const d = day(week({ marine: { swell_wave_height: 3 } }), "surfing");
+		expect(d.score).toBe(30);
+	});
+
+	it("gusts exactly 70 km/h → skiing capped at 30", () => {
+		const d = day(week({ mountain: { wind_gusts_10m: 70 } }), "skiing");
+		expect(d.score).toBe(30);
+	});
+
+	it("a cap above the score is not a reason", () => {
+		// Indoor on a nice but gusty day: 40 + 0.6 × (gusts 100 × 0.1) = 46, below the cap of 70.
+		const d = day(week({ town: { wind_gusts_10m: 62 } }), "indoor");
+		expect(d.score).toBe(46);
+		expect(d.reasons.join(" ")).not.toContain("Rough trip");
+	});
+
+	it("the capped metric is not repeated as a reason", () => {
+		const d = day(week({ town: { precipitation: 1.5 } }), "outdoor");
+		expect(d.reasons[0]).toBe("Heavy rain 12 mm");
+		expect(d.reasons).not.toContain("Rain 12 mm");
 	});
 });
 

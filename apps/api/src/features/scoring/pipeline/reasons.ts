@@ -9,6 +9,7 @@ import { fillValue } from "@/features/scoring/pipeline/text.ts";
  * Up to `max` reasons: caps first (lowest cap first), then the metrics that moved the score
  * most (weight × distance from the neutral centre), good or bad. Neutral metrics are skipped;
  * if all are neutral, the strongest one is used so a day always has a reason.
+ * A metric behind a cap is not repeated: "Heavy rain 12 mm" already says it.
  */
 export function pickReasons(
 	caps: AppliedCap[],
@@ -20,7 +21,10 @@ export function pickReasons(
 	const isNeutral = (m: ScoredMetric) =>
 		m.sub >= config.neutralMin && m.sub <= config.neutralMax;
 
-	const byImpact = metrics.toSorted((a, b) => impact(b) - impact(a));
+	const cappedMetrics = new Set(caps.map((c) => c.metricId));
+	const byImpact = metrics
+		.filter((m) => !cappedMetrics.has(m.metric.id))
+		.toSorted((a, b) => impact(b) - impact(a));
 	const notNeutral = byImpact.filter((m) => !isNeutral(m));
 	const chosen = notNeutral.length > 0 ? notNeutral : byImpact.slice(0, 1);
 

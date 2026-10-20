@@ -11,6 +11,12 @@ export const tomorrow = "2026-10-21";
 
 type FieldValue = (date: string, hour: number) => number | null;
 
+/** Open-Meteo local time "2026-10-21T09:00" → date and hour. */
+export function parseLocalTime(time: string): { date: string; hour: number } {
+	const [date = "", clock = ""] = time.split("T");
+	return { date, hour: Number.parseInt(clock, 10) };
+}
+
 /**
  * Hourly series from `start`, `days` full days, every field computed per hour.
  * A plain number fills every hour. Mirrors Open-Meteo local time strings.

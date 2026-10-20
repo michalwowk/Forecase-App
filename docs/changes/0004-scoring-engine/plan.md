@@ -47,4 +47,5 @@ Status: approved
 - Extra pipeline files: `compare.ts` (gt/gte/lt/lte), `text.ts` (`{value}` and rounding). Pipeline unit tests in one `pipeline.test.ts`.
 - Unsafe `anyHour` trigger got `decimals` (default 0) so reason formatting has no number in logic.
 - Reasons: if every metric is neutral, the strongest one is still used, so a day always has 1–3 reasons.
+- Code review fixes: only caps that lower the score count and give reasons; capped metric not repeated; schema checks label order, unique metric ids, floor in scale; `parseLocalTime` moved to test builders; boundary and mountain Unsafe tests.
 - `/simplify` for readability: `coverage.ts` → `values.ts` (+ `sum`, `anyHourIn`); rules as a `switch`; `hourRange` as a string range; surfing split into named steps; explicit activity keys instead of `Object.fromEntries` casts; `README.md` code map in the module.

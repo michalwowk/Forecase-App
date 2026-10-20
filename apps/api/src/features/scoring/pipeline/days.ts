@@ -22,9 +22,3 @@ export function weekDays(today: string, week: ScoringConfig["week"]): string[] {
 export function localTime(date: string, hour: number): string {
 	return `${date}T${String(hour).padStart(2, "0")}:00`;
 }
-
-/** Open-Meteo local time "2026-10-21T09:00" → date and hour. */
-export function parseLocalTime(time: string): { date: string; hour: number } {
-	const [date = "", clock = ""] = time.split("T");
-	return { date, hour: Number.parseInt(clock, 10) };
-}
