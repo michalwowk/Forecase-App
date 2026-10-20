@@ -23,3 +23,11 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **Findings that changed the product:** town height gives zero snow → elevation grid; inland marine returns nulls, not errors → "Not applicable".
 - **Went wrong:** `data-selection.md` written before the decisions, so it went stale. Verifier caught it; rewritten.
 - **Cut:** air quality (4.5-day horizon), i18n, unit toggle, hourly charts (later idea).
+
+## 2026-10-20 — 0003 repo-scaffold (close)
+- **What:** pnpm monorepo, Yoga API with `health`, Vite + React web with 3 states, Zod env, MSW tests, Biome, CI.
+- **How:** Grilled choices into the plan, one commit per layer, human review of the running app.
+- **Went wrong:** MSW 3 silently ignores the v2 option `onUnhandledRequest`. CRLF noise on Windows → `.gitattributes`.
+- **Changed after review:** `APP_MODE` defaults to `production`; `pnpm dev` loads `.env.development`.
+- **/simplify:** Zod `prettifyError`, Biome config trimmed to non-defaults, `start` without codegen, web moved to `features/` structure, absolute `@/` imports, API build (tsdown) + tsx dev.
+- **Cut:** codegen once per install (kept per command, explicit), API codegen removal, `.gitignore` env rework.

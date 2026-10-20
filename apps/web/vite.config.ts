@@ -1,0 +1,15 @@
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+	plugins: [react()],
+	resolve: { tsconfigPaths: true },
+	server: {
+		// Dev only: same-origin /graphql, no CORS.
+		proxy: { "/graphql": "http://localhost:4000" },
+	},
+	test: {
+		environment: "jsdom",
+		setupFiles: ["./src/mocks/setup.ts"],
+	},
+});

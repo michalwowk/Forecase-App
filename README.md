@@ -9,7 +9,8 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 
 | Path | What |
 |---|---|
-| _code_ | Layout decided in `0003-repo-scaffold` |
+| [`apps/api`](apps/api) | Node + GraphQL Yoga API. Contract: `schema.graphql` |
+| [`apps/web`](apps/web) | React + Vite web app |
 | [`docs/plan.md`](docs/plan.md) | Roadmap of changes + status |
 | [`docs/changes/`](docs/changes/) | One folder per change: `intent.md`, `spec.md`, `plan.md` |
 | [`docs/product/vision.md`](docs/product/vision.md) | What we build and why |
@@ -22,7 +23,18 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 | [`.claude/`](.claude/) | `/change` skill, `verifier` subagent |
 
 ## How to run
-TBD after `0003-repo-scaffold`.
+Needs Node 24 and pnpm.
+
+```sh
+pnpm install
+pnpm dev          # API on :4000, web on http://localhost:5173
+```
+
+- One app only: `pnpm --filter api dev` or `pnpm --filter web dev`.
+- Checks: `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`. CI runs the same on every PR.
+- Production: `pnpm build`, then `pnpm --filter api start` (runs `apps/api/dist/`). Web output: `apps/web/dist/`.
+- Config is optional: see `apps/*/.env.example`. `APP_MODE` = `development` | `test` | `production`; default `production`, `pnpm dev` uses `development`.
+- API on another port? Set `VITE_API_URL=http://localhost:<port>/graphql` for the web (the dev proxy targets :4000).
 
 ## Assumptions
 - No persistence. Open-Meteo only, called per request (4 calls per search).
@@ -44,3 +56,5 @@ TBD after `0003-repo-scaffold`.
 
 ## Cut / not done
 - Hooks, CI evals, monitoring from the playbook — no deploy target, solo work.
+- Log storage and observability (Sentry, Grafana) — nowhere to ship logs. API logs to stdout with pino.
+- Docker, pre-commit hooks — local Node + CI on PRs is enough.

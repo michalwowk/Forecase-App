@@ -1,0 +1,37 @@
+{
+	"name": "@forecase/web",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"codegen": "graphql-codegen --config codegen.ts",
+		"dev": "pnpm codegen && vite",
+		"build": "pnpm codegen && vite build",
+		"test": "pnpm codegen && vitest run",
+		"typecheck": "pnpm codegen && tsc",
+		"lint": "biome check ."
+	},
+	"dependencies": {
+		"@tanstack/react-query": "^5.104.4",
+		"react": "^19.3.1",
+		"react-dom": "^19.3.1",
+		"zod": "^4.6.7"
+	},
+	"devDependencies": {
+		"@forecase/api": "workspace:*",
+		"@graphql-codegen/cli": "^7.4.6",
+		"@graphql-codegen/client-preset": "^6.2.3",
+		"@graphql-typed-document-node/core": "^3.2.0",
+		"@testing-library/dom": "^10.4.2",
+		"@testing-library/jest-dom": "^7.0.1",
+		"@testing-library/react": "^16.3.3",
+		"@testing-library/user-event": "^14.6.8",
+		"@types/react": "^19.3.0",
+		"@types/react-dom": "^19.3.0",
+		"@vitejs/plugin-react": "^6.1.2",
+		"graphql": "^17.0.2",
+		"jsdom": "^30.1.3",
+		"msw": "^3.0.3",
+		"vite": "^8.3.4",
+		"vitest": "^5.0.5"
+	}
+}
