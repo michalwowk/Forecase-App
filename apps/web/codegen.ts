@@ -9,6 +9,7 @@ const config: CodegenConfig = {
 			config: {
 				useTypeImports: true,
 				documentMode: "string",
+				scalars: { Date: "string" },
 			},
 		},
 	},
