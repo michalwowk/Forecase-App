@@ -4,6 +4,8 @@ import { z } from "zod";
 const schema = z.object({
 	APP_MODE: z.enum(["development", "test", "production"]).default("production"),
 	PORT: z.coerce.number().int().min(1).max(65535).default(4000),
+	/** Per Open-Meteo call. Slower → treated as the service being down. */
+	OPEN_METEO_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
 });
 
 type Env = z.infer<typeof schema>;
