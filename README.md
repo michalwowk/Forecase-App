@@ -3,7 +3,7 @@
 Enter a city or town. See how good each of the next 7 days is for skiing, surfing, outdoor sightseeing and indoor sightseeing.
 Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. Frontend not chosen yet (React + TS is the default, see D-008).
 
-> Status: scoring engine done (change `0004`). No API endpoint or UI for it yet. See [roadmap](docs/plan.md).
+> Status: GraphQL API done (change `0005`): place search + scored week on live Open-Meteo data. No UI for it yet. See [roadmap](docs/plan.md).
 
 ## Where to find what
 
@@ -11,6 +11,8 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 |---|---|
 | [`apps/api`](apps/api) | Node + GraphQL Yoga API. Contract: `schema.graphql` |
 | [`apps/api/src/features/scoring`](apps/api/src/features/scoring) | Scoring engine. Start with its [README](apps/api/src/features/scoring/README.md) |
+| [`apps/api/src/features/openMeteo`](apps/api/src/features/openMeteo) | Open-Meteo client. [README](apps/api/src/features/openMeteo/README.md) |
+| `apps/api/src/features/{places,forecast}` | GraphQL resolvers; forecast = terrain + time + scoring on live data |
 | [`apps/web`](apps/web) | React + Vite web app |
 | [`docs/plan.md`](docs/plan.md) | Roadmap of changes + status |
 | [`docs/changes/`](docs/changes/) | One folder per change: `intent.md`, `spec.md`, `plan.md` |
@@ -38,9 +40,11 @@ pnpm dev          # API on :4000, web on http://localhost:5173
 - API on another port? Set `VITE_API_URL=http://localhost:<port>/graphql` for the web (the dev proxy targets :4000).
 
 ## Assumptions
-- No persistence. Open-Meteo only, called per request (4 calls per search).
+- No persistence, no cache (D-023). Open-Meteo only: 1 call per search, 4 per forecast.
 - Skiing uses the highest terrain nearby, not resort data. Surfing uses the sea near the town, not a specific beach.
 - A day is local time, scored on an hour window per activity.
+- All Open-Meteo calls are in UTC; we convert to local time ourselves (DST-safe). Why: [Open-Meteo client README](apps/api/src/features/openMeteo/README.md).
+- The user picks the place from Open-Meteo's list; no auto-match (D-022).
 - Free Open-Meteo tier: non-commercial use, attribution shown in the UI.
 - Full list: [vision](docs/product/vision.md) and [decisions](docs/product/decisions.md).
 

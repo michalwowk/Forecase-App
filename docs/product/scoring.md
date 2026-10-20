@@ -21,6 +21,15 @@ Target user: recreational, intermediate (skier on pistes, surfer on green waves,
 | Cold | apparent ≤ −25 °C | Frostbite in ~30 min. |
 Skiing checks the mountain point, the rest the town.
 
+## Mountain point (D-012, D-024)
+| Rule | Value | Why |
+|---|---|---|
+| Grid | 5 × 5 points, ±20 km | Test app, 1 call. 3 × 3 missed the Tatras (Zakopane 1082 m). |
+| Point | Highest grid point | Where snow is. |
+| Cap | 2500 m | Higher is mostly rock and glacier, not pistes. |
+| Not applicable | highest < 1000 m, or < town + 500 m | No real ski terrain (Kraków hills ~440 m). |
+Town height = Geocoding, else the nearest grid point. Weak spot: a sparse grid can miss a peak.
+
 ## Skiing — mountain point, 9–16, fresh snow from 16:00 day before
 | Metric | Agg | Rule (0 → 100) | Weight | Why |
 |---|---|---|---|---|
