@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { defaultConfig } from "@/features/scoring/config/defaultConfig.ts";
-import { metricValue } from "@/features/scoring/pipeline/coverage.ts";
 import {
 	addDays,
 	parseLocalTime,
 	weekDays,
 } from "@/features/scoring/pipeline/days.ts";
+import { metricValue } from "@/features/scoring/pipeline/values.ts";
 import { hourRange } from "@/features/scoring/pipeline/windows.ts";
-import { buildSeries } from "@/features/scoring/test/builders.ts";
-
-const today = "2026-10-20";
-const tomorrow = "2026-10-21";
+import {
+	buildSeries,
+	today,
+	tomorrow,
+} from "@/features/scoring/test/builders.ts";
 
 describe("days", () => {
 	it("week starts tomorrow and has the configured length", () => {
@@ -36,22 +37,21 @@ describe("days", () => {
 describe("hourRange", () => {
 	const series = buildSeries(today, 3, { x: 1 });
 	const window = { start: 9, end: 16 };
+	/** Date and hour of the n-th index in a range. */
+	const hourAt = (indices: number[], n: number) =>
+		parseLocalTime(series.time[indices.at(n) ?? -1] ?? "");
 
 	it("takes window hours, end excluded", () => {
 		const range = hourRange(series, tomorrow, window);
-		const hours = range.indices.map(
-			(i) => parseLocalTime(series.time[i] ?? "").hour,
-		);
+		const hours = range.indices.map((_, n) => hourAt(range.indices, n).hour);
 		expect(hours).toEqual([9, 10, 11, 12, 13, 14, 15]);
 		expect(range.expected).toBe(window.end - window.start);
 	});
 
 	it("with fromPreviousDayHour, adds the evening before and the night", () => {
 		const range = hourRange(series, tomorrow, window, 16);
-		const first = parseLocalTime(series.time[range.indices[0] ?? 0] ?? "");
-		const last = parseLocalTime(series.time[range.indices.at(-1) ?? 0] ?? "");
-		expect(first).toEqual({ date: today, hour: 16 });
-		expect(last).toEqual({ date: tomorrow, hour: 15 });
+		expect(hourAt(range.indices, 0)).toEqual({ date: today, hour: 16 });
+		expect(hourAt(range.indices, -1)).toEqual({ date: tomorrow, hour: 15 });
 		expect(range.expected).toBe(8 + 16);
 		expect(range.indices).toHaveLength(range.expected);
 	});
@@ -66,6 +66,14 @@ describe("metricValue", () => {
 	const window = { start: 10, end: 18 };
 	const { minCoverage } = defaultConfig;
 	const metric = { field: "rain", scale: 1 } as const;
+	/** Rain summed over tomorrow's window. */
+	const rainSum = (series: ReturnType<typeof buildSeries>) =>
+		metricValue(
+			series,
+			{ ...metric, aggregate: "sum" },
+			hourRange(series, tomorrow, window),
+			minCoverage,
+		);
 
 	it("aggregates sum, max, mean", () => {
 		const series = buildSeries(today, 2, { rain: (_d, h) => h - 10 });
@@ -92,30 +100,15 @@ describe("metricValue", () => {
 
 	it("is null below minCoverage, a value at it", () => {
 		// 8 h window, 0.75 → needs 6 h.
-		const withGaps = (missing: number) =>
-			buildSeries(today, 2, { rain: (_d, h) => (h < 10 + missing ? null : 1) });
-		const value = (missing: number) => {
-			const series = withGaps(missing);
-			return metricValue(
-				series,
-				{ ...metric, aggregate: "sum" },
-				hourRange(series, tomorrow, window),
-				minCoverage,
-			);
-		};
-		expect(value(2)).toBe(6);
-		expect(value(3)).toBeNull();
+		const missingFirst = (hours: number) =>
+			buildSeries(today, 2, {
+				rain: (_d, h) => (h < window.start + hours ? null : 1),
+			});
+		expect(rainSum(missingFirst(2))).toBe(6);
+		expect(rainSum(missingFirst(3))).toBeNull();
 	});
 
 	it("is null when the field is absent", () => {
-		const series = buildSeries(today, 2, {});
-		expect(
-			metricValue(
-				series,
-				{ ...metric, aggregate: "sum" },
-				hourRange(series, tomorrow, window),
-				minCoverage,
-			),
-		).toBeNull();
+		expect(rainSum(buildSeries(today, 2, {}))).toBeNull();
 	});
 });

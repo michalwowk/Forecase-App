@@ -124,7 +124,10 @@ export const defaultConfig = parseScoringConfig({
 					aggregate: "max",
 					weight: 0.15,
 					rule: { kind: "lowerIsBetter", good: 30, bad: 60 },
-					reasons: { good: "Light wind", bad: "Strong gusts {value} km/h" },
+					reasons: {
+						good: "Light wind (gusts {value} km/h)",
+						bad: "Strong gusts {value} km/h",
+					},
 				},
 				{
 					id: "sunshine",
@@ -209,7 +212,7 @@ export const defaultConfig = parseScoringConfig({
 					weight: 0.25,
 					rule: { kind: "lowerIsBetter", good: 10, bad: 30 },
 					reasons: {
-						good: "Clean wind conditions",
+						good: "Clean wind ({value} km/h effective)",
 						bad: "Wind spoils the waves ({value} km/h)",
 					},
 				},
@@ -261,7 +264,7 @@ export const defaultConfig = parseScoringConfig({
 					weight: 0.35,
 					key: true,
 					rule: { kind: "lowerIsBetter", good: 0.2, bad: 5 },
-					reasons: { good: "Dry", bad: "Rain {value} mm" },
+					reasons: { good: "Dry ({value} mm)", bad: "Rain {value} mm" },
 				},
 				{
 					id: "precipitationProbability",
@@ -319,7 +322,10 @@ export const defaultConfig = parseScoringConfig({
 					aggregate: "max",
 					weight: 0.1,
 					rule: { kind: "lowerIsBetter", good: 30, bad: 60 },
-					reasons: { good: "Calm wind", bad: "Gusty ({value} km/h)" },
+					reasons: {
+						good: "Light wind (gusts {value} km/h)",
+						bad: "Gusty ({value} km/h)",
+					},
 				},
 			],
 			caps: [
@@ -358,7 +364,7 @@ export const defaultConfig = parseScoringConfig({
 					rule: { kind: "lowerIsBetter", good: 0.2, bad: 5, invert: true },
 					reasons: {
 						good: "Rainy outside ({value} mm) — good day for museums",
-						bad: "Dry outside — better spent outdoors",
+						bad: "Dry outside ({value} mm) — better spent outdoors",
 					},
 				},
 				{
@@ -371,7 +377,7 @@ export const defaultConfig = parseScoringConfig({
 					rule: { kind: "lowerIsBetter", good: 20, bad: 80, invert: true },
 					reasons: {
 						good: "Rain likely outside ({value} %)",
-						bad: "Rain unlikely outside",
+						bad: "Rain unlikely outside ({value} %)",
 					},
 				},
 				{
@@ -406,7 +412,7 @@ export const defaultConfig = parseScoringConfig({
 					weight: 0.2,
 					rule: { kind: "higherIsBetter", bad: 0, good: 5, invert: true },
 					reasons: {
-						good: "Grey sky outside",
+						good: "Grey sky outside ({value} h of sun)",
 						bad: "Sunny outside ({value} h of sun)",
 					},
 				},
@@ -420,7 +426,7 @@ export const defaultConfig = parseScoringConfig({
 					rule: { kind: "lowerIsBetter", good: 30, bad: 60, invert: true },
 					reasons: {
 						good: "Windy outside ({value} km/h)",
-						bad: "Calm outside",
+						bad: "Calm outside (gusts {value} km/h)",
 					},
 				},
 			],

@@ -2,7 +2,7 @@ import type { ActivityConfig } from "@/features/scoring/config/schema.ts";
 import {
 	addDays,
 	HOURS_PER_DAY,
-	parseLocalTime,
+	localTime,
 } from "@/features/scoring/pipeline/days.ts";
 import type { HourlySeries } from "@/features/scoring/types.ts";
 
@@ -13,8 +13,9 @@ export interface HourRange {
 }
 
 /**
- * Window hours of `date` (start included, end excluded).
- * With `fromPreviousDayHour`, also the day before from that hour, through the night.
+ * Hours of `date` from `window.start` (included) to `window.end` (excluded).
+ * With `fromPreviousDayHour`, the range starts the evening before instead (overnight snow).
+ * Local ISO times sort as text, so the range is a plain string comparison.
  */
 export function hourRange(
 	series: HourlySeries,
@@ -22,26 +23,19 @@ export function hourRange(
 	window: ActivityConfig["window"],
 	fromPreviousDayHour?: number,
 ): HourRange {
-	const previous = addDays(date, -1);
-	const fromStart = fromPreviousDayHour === undefined;
-	const indices: number[] = [];
+	const fromEvening = fromPreviousDayHour !== undefined;
+	const start = fromEvening
+		? localTime(addDays(date, -1), fromPreviousDayHour)
+		: localTime(date, window.start);
+	const end = localTime(date, window.end);
 
+	const indices: number[] = [];
 	series.time.forEach((time, index) => {
-		const local = parseLocalTime(time);
-		const inDay = fromStart
-			? local.date === date &&
-				local.hour >= window.start &&
-				local.hour < window.end
-			: local.date === date && local.hour < window.end;
-		const inPreviousEvening =
-			!fromStart &&
-			local.date === previous &&
-			local.hour >= fromPreviousDayHour;
-		if (inDay || inPreviousEvening) indices.push(index);
+		if (time >= start && time < end) indices.push(index);
 	});
 
-	const expected = fromStart
-		? window.end - window.start
-		: HOURS_PER_DAY - fromPreviousDayHour + window.end;
+	const expected = fromEvening
+		? HOURS_PER_DAY - fromPreviousDayHour + window.end
+		: window.end - window.start;
 	return { indices, expected };
 }

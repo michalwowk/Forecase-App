@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ACTIVITIES, LABELS } from "@/features/scoring/types.ts";
+import { LABELS } from "@/features/scoring/types.ts";
 
 // Shape of the scoring config, one JSDoc per field. Values live in defaultConfig.ts.
 // Strict objects everywhere: a typo in the config fails at load, not silently.
@@ -147,6 +147,8 @@ const unsafeTriggerSchema = z.discriminatedUnion("kind", [
 		field: z.string().min(1),
 		op: comparison,
 		value: z.number(),
+		/** Digits shown for `{value}` in the reason. */
+		decimals: z.number().int().min(0).default(0),
 		reason: z.string(),
 	}),
 	/** Hour value of `field` is one of `values`. */
@@ -235,12 +237,12 @@ export const scoringConfigSchema = z
 			}),
 		}),
 		/** One entry per activity. */
-		activities: z.strictObject(
-			Object.fromEntries(ACTIVITIES.map((a) => [a, activitySchema])) as Record<
-				(typeof ACTIVITIES)[number],
-				typeof activitySchema
-			>,
-		),
+		activities: z.strictObject({
+			skiing: activitySchema,
+			surfing: activitySchema,
+			outdoor: activitySchema,
+			indoor: activitySchema,
+		}),
 	})
 	.refine((c) => c.scale.min < c.scale.max, "scale min must be below max")
 	.refine(
@@ -257,6 +259,7 @@ export const scoringConfigSchema = z
 	);
 
 export type ScoringConfig = z.output<typeof scoringConfigSchema>;
+export type Comparison = z.output<typeof comparison>;
 export type ScoringConfigInput = z.input<typeof scoringConfigSchema>;
 export type ActivityConfig =
 	ScoringConfig["activities"][keyof ScoringConfig["activities"]];

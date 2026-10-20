@@ -10,6 +10,7 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 | Path | What |
 |---|---|
 | [`apps/api`](apps/api) | Node + GraphQL Yoga API. Contract: `schema.graphql` |
+| [`apps/api/src/features/scoring`](apps/api/src/features/scoring) | Scoring engine. Start with its [README](apps/api/src/features/scoring/README.md) |
 | [`apps/web`](apps/web) | React + Vite web app |
 | [`docs/plan.md`](docs/plan.md) | Roadmap of changes + status |
 | [`docs/changes/`](docs/changes/) | One folder per change: `intent.md`, `spec.md`, `plan.md` |
