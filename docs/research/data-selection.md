@@ -31,7 +31,7 @@ Windows, weights and thresholds → `scoring.md` in `0004`.
 | `swell_wave_height` | Rideable energy. |
 | `swell_wave_period` | Longer period = better waves. |
 | `wind_wave_height` | Local chop lowers quality. |
-| Forecast `wind_speed_10m`, `wind_direction_10m` | Offshore vs onshore wind. |
+| Forecast `wind_speed_10m`, `wind_direction_10m` | Offshore vs onshore wind, against the sea bearing from the elevation grid (D-020). |
 - Skip `wave_peak_period` (always null). All-null marine response = no sea → "Not applicable".
 
 ## Outdoor sightseeing (Forecast, hourly at the town point)
@@ -40,14 +40,14 @@ Windows, weights and thresholds → `scoring.md` in `0004`.
 | `precipitation`, `precipitation_probability` | Rain is the main downer. |
 | `apparent_temperature` | Felt comfort, not raw temperature. |
 | `wind_gusts_10m` | Unpleasant, and part of the Unsafe check (D-011). |
-| `sunshine_duration`, `cloud_cover` | Nice vs grey day. |
-| `uv_index` | Midday UV risk. |
+| `sunshine_duration` | Nice vs grey day. |
 | `weather_code` | Reason text; hail storm (96/99) → Unsafe. |
 
 ## Indoor sightseeing
-- No own fields. Complement of the outdoor score, floor at Fair, Unsafe carries over (D-013).
+- Same town fields as outdoor, inverted, own config (D-021).
 
 ## Left out
+- `cloud_cover` (duplicates sunshine), `uv_index` (no real impact) — D-019.
 - Air quality: ~4.5 days of values, no daily aggregate, pollen Europe-only. Can't cover 7 days.
 - Daily aggregates: whole-day values ignore the hour window (D-010).
 
