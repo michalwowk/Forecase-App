@@ -34,4 +34,11 @@ Paths under `apps/web/` unless noted.
 - `pnpm test`, `pnpm typecheck`, `pnpm lint`.
 
 ## Divergence log
-- 
+- `ForecastView` gets the query from `App`: `App` also needs `forecast.place` for the input and the "Place not found" flow.
+- "Place not found" lives in `App`: after `replaceState` there is no place, so `ForecastView` is gone.
+- `PlaceCombobox` label helper in `features/places/utils/placeLabel.ts` (not listed).
+- `src/mocks/fixtures/places.ts` (not listed): real GeoNames ids shared by the search and forecast handlers.
+- Steps 3–4 in one commit (shared `handlers/index.ts`).
+- Steps 3–6 code not reviewed by a human: out of time.
+- `/code-review` findings not fixed (out of time): error replaces loaded grid on failed background refetch; "Place not found" returns on Back to `/`; available row with no days shows "Not applicable"; skeleton lacks the header row; non-unique list keys in `DayDetail`; `vision.md` and `README.md` over ~60 lines.
+- `features/health` + its handler not deleted yet (removal blocked in agent shell).

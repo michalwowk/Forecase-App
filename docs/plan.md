@@ -11,7 +11,7 @@ Status: `todo` · `doing` · `done` · `cut` (+ one-line reason). Order may chan
 | 0005 | graphql-api | Schema, resolvers, Open-Meteo client | done |
 | 0006 | bff-simplify | Slimmer GraphQL BFF: take a place, the rest happens underneath | done |
 | 0007 | web-ui | Search a place, show ranked days per activity | doing |
-| 0008 | states-and-errors | Loading, no matches, API failure, partial failure | todo |
+| 0008 | states-and-errors | Loading, no matches, API failure, partial failure | cut — merged into 0007 |
 | 0009 | readme-final | Run steps, assumptions, cuts | todo |
 
 ## Notes from 0004 (closed in 0005)
