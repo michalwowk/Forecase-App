@@ -4,6 +4,8 @@ Enter a city or town. See how good each of the next 7 days is for skiing, surfin
 Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. React + Vite + Tailwind web app only displays it.
 
 > Status: GraphQL BFF (changes `0005`, `0006`) and web UI (`0007`): search a place, see the week grid and day detail. Desktop only. See [roadmap](docs/plan.md).
+>
+> Note: part of the code was not reviewed in depth. See [retrospective](docs/retrospective.md).
 
 ## Where to find what
 
@@ -22,6 +24,7 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 | [`docs/product/glossary.md`](docs/product/glossary.md) | Terms |
 | [`docs/research/`](docs/research/) | Research notes |
 | [`docs/worklog.md`](docs/worklog.md) | How the work actually went |
+| [`docs/retrospective.md`](docs/retrospective.md) | Honest note on code quality and what I'd do differently |
 | [`CLAUDE.md`](CLAUDE.md) | Rules for AI agents |
 | [`.claude/`](.claude/) | `/change` skill, `verifier` subagent |
 
