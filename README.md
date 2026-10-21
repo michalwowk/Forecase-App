@@ -1,9 +1,9 @@
 # Forecase
 
 Enter a city or town. See how good each of the next 7 days is for skiing, surfing, outdoor sightseeing and indoor sightseeing.
-Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. Frontend not chosen yet (React + TS is the default, see D-008).
+Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns the scoring. React + Vite + Tailwind web app only displays it.
 
-> Status: GraphQL BFF done (changes `0005`, `0006`): `placeSearch(query)` + `forecast(placeId)` on live Open-Meteo data. No UI for it yet. See [roadmap](docs/plan.md).
+> Status: GraphQL BFF (changes `0005`, `0006`) and web UI (`0007`): search a place, see the week grid and day detail. Desktop only. See [roadmap](docs/plan.md).
 
 ## Where to find what
 
@@ -13,7 +13,7 @@ Weather from [Open-Meteo](https://open-meteo.com/). Node + GraphQL backend owns 
 | [`apps/api/src/features/scoring`](apps/api/src/features/scoring) | Scoring engine. Start with its [README](apps/api/src/features/scoring/README.md) |
 | [`apps/api/src/features/openMeteo`](apps/api/src/features/openMeteo) | Open-Meteo client. [README](apps/api/src/features/openMeteo/README.md) |
 | `apps/api/src/features/{places,forecast}` | GraphQL resolvers; forecast = terrain + time + scoring on live data |
-| [`apps/web`](apps/web) | React + Vite web app |
+| [`apps/web`](apps/web) | React + Vite web app: `features/places` (search combobox), `features/forecast` (grid, detail, states) |
 | [`docs/plan.md`](docs/plan.md) | Roadmap of changes + status |
 | [`docs/changes/`](docs/changes/) | One folder per change: `intent.md`, `spec.md`, `plan.md` |
 | [`docs/product/vision.md`](docs/product/vision.md) | What we build and why |
@@ -44,7 +44,8 @@ pnpm dev          # API on :4000, web on http://localhost:5173
 - Skiing uses the highest terrain nearby, not resort data. Surfing uses the sea near the town, not a specific beach.
 - A day is local time, scored on an hour window per activity.
 - All Open-Meteo calls are in UTC; we convert to local time ourselves (DST-safe). Why: [Open-Meteo client README](apps/api/src/features/openMeteo/README.md).
-- The user picks the place from Open-Meteo's list; no auto-match (D-022).
+- The user picks the place from Open-Meteo's list; no auto-match (D-022). Search starts at 2 characters (D-027).
+- Desktop only; no mobile layout (D-026). Picked place is in the URL: `/?place=2775220` (D-028).
 - Free Open-Meteo tier: non-commercial use, attribution shown in the UI.
 - Full list: [vision](docs/product/vision.md) and [decisions](docs/product/decisions.md).
 

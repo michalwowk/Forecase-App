@@ -178,3 +178,26 @@ Newest at the bottom. Never edit an old one; supersede it.
 - **Known trade-off:** a bigger app (more clients, filters, languages) would need to widen and rethink the schema.
 - **Rejected:** 0005 schema with Open-Meteo params, `Node`, `Place.forecast`; one query by name with alternatives (back to D-009).
 - **Change:** 0006
+
+## D-026 Desktop only (2026-10-21)
+
+- **Decision:** The web UI targets desktop widths only. Supersedes the mobile part of D-014 (days-as-rows on mobile). The rest of D-014 stays.
+- **Why:** Test app; the 4 × 7 grid is the core view. One layout to build and test.
+- **Known trade-off:** a real app needs mobile too.
+- **Rejected:** days-as-rows on mobile (D-014); responsive table with horizontal scroll.
+- **Change:** 0007
+
+## D-027 Search as you type (2026-10-21)
+
+- **Decision:** One combobox. Trimmed text < 2 chars sends nothing; otherwise `placeSearch` 300 ms after the last keystroke. The picked place shows in the input. Keyboard and ARIA by Headless UI.
+- **Why:** Fewer steps than search + list. 2 chars and the delay keep calls to Open-Meteo low.
+- **Known trade-off:** 1-letter places (Å, Y) can't be found.
+- **Rejected:** search on submit with a list above the grid.
+- **Change:** 0007
+
+## D-028 Place in the URL (2026-10-21)
+
+- **Decision:** The picked place lives in `?place=<GeoNames id>`. Pick → new history entry; back/forward switch places. Unknown id → "Place not found", param removed without a history entry. No router library.
+- **Why:** Refresh and shared links restore the view.
+- **Rejected:** state in memory; `?query=…&place=…` (the combobox has no list to restore).
+- **Change:** 0007

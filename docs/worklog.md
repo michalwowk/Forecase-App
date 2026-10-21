@@ -74,3 +74,20 @@ How the work went. One entry per session. What, how, what went wrong, what was c
 - **Went wrong:** agent dropped the 1-forecast limit, claiming aliases cost only 2 calls; review showed any number of aliases → limit restored.
 - **I corrected the agent:** the 0005 schema was too big for a BFF (search params, `Node`, coordinates, nested `Place.forecast`) → take a place, do the rest underneath.
 - **Didn't fit:** agent read my "tak" as option (b) (one query + alternatives); I meant to go back and chose (c) (two steps, slimmed).
+
+## 2026-10-20 — 0007 web-ui (in progress, see close below)
+- **I corrected the agent:**
+  - Agent proposed states/errors as a separate 0008 → all in 0007, 0008 cut.
+  - Plain CSS, no deps → Tailwind v4.
+  - Responsive table with horizontal scroll → desktop only, mobile out of scope (my call).
+  - State in memory → query and place in the URL.
+  - Agent answered in English → chat in Polish (memory rule ignored).
+  - Search on submit + list above the grid → combobox with debounce, picked place shown as selected.
+  - Agent planned no automatic retries → keep TanStack Query defaults.
+
+## 2026-10-21 — 0007 web-ui (close)
+- **What:** Combobox search, place in the URL, 4 × 7 week grid, day detail, all states (0008 merged in). D-026…D-028. 34 web tests.
+- **How:** Steps 3–5 built in one go. `verifier` ready (all criteria met), `/code-review` 9 findings.
+- **Went wrong:** Deleting `features/health` was blocked in the agent shell → still in the repo.
+- **Cut (out of time):** human code review, fixes for 6 review findings, manual browser check. Listed in the change's `plan.md`.
+- **I asked for:** commit without fixes, with a "not reviewed, out of time" note.

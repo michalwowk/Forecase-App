@@ -1,20 +1,22 @@
 # Vision
 
-> Final after `0002-discovery`. Decisions D-009…D-015, place list D-022 (0005). Data facts in `docs/research/`.
+> Final after `0002-discovery`. Decisions D-009…D-015, place list D-022 (0005), web UI D-026…D-028 (0007). Data facts in `docs/research/`.
 
 ## Problem
 - You're planning a week in a town. Raw forecasts don't answer "when should I ski, surf, walk around, or do museums?".
 
 ## The answer we show
-- Matching places (name, region, country) in Open-Meteo order. The user picks one (D-022).
+- Search as you type: matches (name, region, country) in Open-Meteo order. The user picks one (D-022, D-027).
+- Picked place in the URL (`?place=<id>`), so links and refresh work (D-028).
+- Desktop only (D-026).
 - Week grid: 4 activities × 7 local days. Label + colour per cell, best day per row highlighted.
 - Click a cell → label, score, 1–3 reasons, key values, what the data covers.
 - Honest states: Not applicable, No data, Unsafe (D-011).
 
 ```
- [ Innsbruck                ] [Search]
- ( ) Innsbruck, Tyrol, Austria
- ( ) Innsbruck Airport, Tyrol, Austria
+ [ Inns|                              ]
+ | Innsbruck, Tyrol, Austria          |
+ | Innsbruck Airport, Tyrol, Austria  |
 
             Mon   Tue   Wed   Thu   Fri   Sat   Sun
  Skiing     Fair  Good  Great* Good  Unsafe Fair  Fair   ~2200 m nearby
@@ -33,7 +35,9 @@
 ## States
 - Empty: search box only.
 - Loading: grid skeleton.
-- No matches: "No place called X" + search again.
+- No matches: "No place called X" in the list.
+- Search down: "Search unavailable" + retry in the list.
+- Unknown place in the URL: "Place not found", param removed.
 - Partial failure: working rows shown, failed row says "Data temporarily unavailable" (Marine → surfing, Elevation → skiing).
 - Full failure (geocoding or forecast down): error + retry.
 
